@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  /* GREGREY Brand Colours — from identity deck */
+  --color-sky: #B7CCE3;
+  --color-sky-light: #D9E6F3;
+  --color-sky-dark: #8DA1B9;
+  --color-burgundy: #721010;
+  --color-burgundy-dark: #560C0C;
+  --color-burgundy-light: #8E2424;
+  --color-mist: #E0E4DE;
+  --color-mist-light: #F2F4F0;
+  --color-pebble: #BCBDB8;
+  --color-steel: #8DA1B9;
+  --color-steel-dark: #5C748E;
+
+  /* Semantic tokens */
+  --color-background: #F7F8F7;
+  --color-surface: #FFFFFF;
+  --color-ink: #17222F;
+  --color-ink-soft: #3D4E61;
+  --color-muted: #6B7C90;
+  --color-border: #E2E6E1;
+  --color-success: #1E7F4F;
+  --color-warning: #B7791F;
+  --color-error: #B3261E;
+  --color-ai: #4A7FB5;
+  --color-verified: #1E7F4F;
+
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --color-brand-primary: #721010;
+  --color-brand-secondary: #8DA1B9;
+  --color-accent: #B7CCE3;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Brand pattern — dotted wave divider */
+.brand-wave {
+  background-image: radial-gradient(#721010 1.2px, transparent 1.2px),
+    radial-gradient(#8DA1B9 1.2px, transparent 1.2px);
+  background-size: 18px 18px, 22px 22px;
+  background-position: 0 0, 9px 12px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
