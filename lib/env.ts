@@ -16,6 +16,8 @@ function required(name: string, value: string | undefined, opts?: { public?: boo
 
 export const env = {
   DATABASE_URL: required("DATABASE_URL", process.env.DATABASE_URL),
+  // Optional until Neon is wired. See docs/database.md.
+  DIRECT_URL: process.env.DIRECT_URL ?? "",
   AUTH_SECRET: required("AUTH_SECRET", process.env.AUTH_SECRET),
   AI_PROVIDER_API_KEY: required(
     "AI_PROVIDER_API_KEY",

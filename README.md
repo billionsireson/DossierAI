@@ -12,7 +12,7 @@ Milestone 0 — Foundation (in progress). See `DOSSIERAI_PRD_OPENCODE_GITHUB.md`
 
 - Next.js 16 (App Router) + TypeScript + React 19
 - Tailwind CSS v4
-- PostgreSQL + Prisma
+- PostgreSQL + Prisma (managed: **Neon** — see `docs/database.md`; local fallback: `docker-compose.yml`)
 - Stateless session (jose) — Google OAuth planned per PRD §30
 
 ## Getting started

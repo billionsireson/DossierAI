@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dossierai
+      POSTGRES_PASSWORD: dossierai
+      POSTGRES_DB: dossierai
+    ports:
+      - "5432:5432"
+    volumes:
+      - dossierai-pg:/var/lib/postgresql/data
+
+volumes:
+  dossierai-pg:
