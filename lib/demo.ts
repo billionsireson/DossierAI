@@ -24,7 +24,41 @@ export const demoPortfolios: Portfolio[] = [
       { id: "li", label: "LinkedIn", url: "https://linkedin.com" },
       { id: "be", label: "Behance", url: "https://behance.net" },
     ],
-    sections: [],
+    sections: [
+      {
+        id: "demo-hero",
+        type: "hero",
+        order: 0,
+        visible: true,
+        content: {
+          headline: "Product Designer | UX Strategy | Digital Experiences",
+          subheadline: "3+ years across fintech and e-commerce. Sample data for development.",
+        },
+      },
+      {
+        id: "demo-about",
+        type: "about",
+        order: 1,
+        visible: true,
+        content: {
+          body: "Product designer focused on UX strategy and digital experiences. Sample data for development.",
+        },
+      },
+      {
+        id: "demo-skills",
+        type: "skills",
+        order: 2,
+        visible: true,
+        content: { skills: ["Product Design", "UX Research", "UI Design", "Design Systems"] },
+      },
+      {
+        id: "demo-contact",
+        type: "contact",
+        order: 3,
+        visible: true,
+        content: { email: "esther@example.com", location: "Lagos, Nigeria" },
+      },
+    ],
     theme: { templateId: "modern-professional", mode: "light" },
     seo: { title: "Esther Okafor — Product Designer" },
     publishing: { status: "published", publishedAt: new Date().toISOString() },
