@@ -13,7 +13,7 @@ export function CTA() {
         </p>
         <Link
           href="/app/dashboard"
-          className="mt-7 inline-block rounded-xl bg-white px-7 py-3.5 font-semibold text-[#07142F] hover:bg-[#F7FAFC]"
+          className="mt-7 inline-block rounded-full bg-[#B7F000] px-7 py-3.5 font-semibold text-[#07142F] hover:bg-[#a6e000]"
         >
           Build My Portfolio
         </Link>

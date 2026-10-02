@@ -1,39 +1,39 @@
 const FEATURES = [
   {
-    title: "AI-powered generation",
-    desc: "Extraction → structured profile → portfolio narrative. Evidence-first, never invented.",
+    title: "AI-Powered Creation",
+    desc: "Turns your CV, resume or project files into a complete, professional portfolio.",
   },
   {
-    title: "Professional templates",
-    desc: "Four curated families that share one schema — switch presentation without losing content.",
+    title: "Premium Designs",
+    desc: "Modern, clean and globally accepted templates that make you stand out.",
   },
   {
-    title: "Multiple input formats",
-    desc: "PDF, DOCX, TXT, JPG, PNG, WebP. Drag-and-drop plus mobile camera where supported.",
+    title: "Fully Editable",
+    desc: "Customize your content, layout, colors and sections to match your style.",
   },
   {
-    title: "Project storytelling",
-    desc: "Briefs, decks and screenshots become case-study cards with problem, role, process, outcome.",
+    title: "Multiple Input Options",
+    desc: "Upload CV, resume, project documents or take a photo.",
   },
   {
-    title: "Editable portfolios",
-    desc: "Structured section editing — content, order, visibility — not a complex canvas.",
+    title: "Lifetime Publishing",
+    desc: "Keep your portfolio live and accessible forever (with Pro/Premium).",
   },
   {
-    title: "Publish + share",
-    desc: "Shareable URL with SEO + social metadata and resume download. Lifetime option on Premium.",
+    title: "Built for Everyone",
+    desc: "Students, professionals, creatives, freelancers, job seekers and teams.",
   },
 ];
 
 export function Features() {
   return (
     <section id="features" aria-labelledby="features-heading" className="mx-auto w-full max-w-6xl px-6 py-16">
-      <p className="text-xs font-semibold tracking-[0.2em] text-[#2563EB]">
-        FEATURES
-      </p>
-      <h2 id="features-heading" className="mt-2 max-w-2xl text-3xl font-bold tracking-tight text-[#0F172A] md:text-4xl">
-        More than a CV. A complete professional presence.
+      <h2 id="features-heading" className="text-2xl font-bold tracking-tight text-[#0F172A] md:text-3xl">
+        Why DossierAI?
       </h2>
+      <p className="mt-1 text-[#64748B]">
+        More than a CV. It&apos;s your personal brand, on autopilot.
+      </p>
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f) => (
           <li

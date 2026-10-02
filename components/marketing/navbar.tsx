@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   return (
@@ -21,11 +20,17 @@ export function Navbar() {
         </Link>
       </nav>
       <div className="flex items-center gap-2">
-        <Link href="/app/dashboard">
-          <Button variant="ghost">Sign in</Button>
+        <Link
+          href="/app/dashboard"
+          className="rounded-lg px-4 py-2 text-sm font-medium text-[#475569] hover:text-[#0F172A]"
+        >
+          Sign in
         </Link>
-        <Link href="/app/dashboard">
-          <Button>Build Your Portfolio</Button>
+        <Link
+          href="/app/dashboard"
+          className="rounded-lg bg-[#B7F000] px-4 py-2 text-sm font-semibold text-[#07142F] hover:bg-[#a6e000]"
+        >
+          Build Your Portfolio
         </Link>
       </div>
     </header>

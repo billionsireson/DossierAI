@@ -1,52 +1,78 @@
 import Link from "next/link";
+import { Logo } from "@/components/logo";
+
+const FILE_BADGES = [
+  { label: "PDF", bg: "bg-[#ef4444]" },
+  { label: "DOCX", bg: "bg-[#2563EB]" },
+  { label: "IMG", bg: "bg-[#7c3aed]" },
+];
 
 export function Hero() {
   return (
-    <section
-      aria-labelledby="hero-heading"
-      className="mx-auto w-full max-w-6xl px-6 pt-10"
-    >
-      <div className="overflow-hidden rounded-3xl bg-[#07142F] px-6 py-16 text-center text-white md:px-16 md:py-20">
-        <p className="text-xs font-semibold tracking-[0.22em] text-[#B7F000]">
-          YOUR CV. YOUR STORY. A GLOBAL PORTFOLIO.
-        </p>
-        <h1
-          id="hero-heading"
-          className="mx-auto mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight md:text-6xl"
-        >
-          Turn Your CV, Resume or Project into a Professional Portfolio —
-          Instantly.
-        </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-base text-[#cbd5e1] md:text-lg">
-          Upload your professional material and let DossierAI transform it into
-          a polished, responsive portfolio website. No code. No design skills.
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            href="/app/dashboard"
-            className="rounded-xl bg-[#2563EB] px-7 py-3.5 font-semibold text-white transition-colors hover:bg-[#1d4ed8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B7F000]"
-          >
-            Build Your Portfolio
-          </Link>
-          <Link
-            href="/examples"
-            className="rounded-xl border border-white/25 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Explore Examples
-          </Link>
-        </div>
-        <dl className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4 text-center">
-          {[
-            ["Minutes", "upload → publish"],
-            ["4", "curated templates"],
-            ["100%", "responsive output"],
-          ].map(([v, l]) => (
-            <div key={l} className="rounded-xl bg-white/5 px-3 py-4">
-              <dt className="order-2 mt-1 block text-xs text-[#94a3b8]">{l}</dt>
-              <dd className="text-xl font-bold text-white">{v}</dd>
+    <section aria-labelledby="hero-heading" className="px-3 pt-3 md:px-6 md:pt-6">
+      <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-3xl bg-[#07142F] px-6 py-12 md:px-12 md:py-16">
+        <div className="grid items-center gap-10 md:grid-cols-2">
+          <div>
+            <Logo tone="dark" />
+            <p className="mt-8 text-xs font-semibold tracking-[0.22em] text-[#cbd5e1]">
+              YOUR STORY. PROFESSIONALLY PRESENTED.
+            </p>
+            <h1
+              id="hero-heading"
+              className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl"
+            >
+              Turn Your CV, Resume or Projects into a Stunning Portfolio —{" "}
+              <span className="bg-gradient-to-r from-[#60a5fa] to-[#2563EB] bg-clip-text text-transparent">
+                Instantly.
+              </span>
+            </h1>
+            <p className="mt-5 max-w-md text-[#cbd5e1]">
+              Upload your CV, resume or project document, let DossierAI build a
+              complete, modern, professional portfolio for you — in minutes.
+            </p>
+            <div className="mt-8">
+              <Link
+                href="/app/dashboard"
+                className="inline-block rounded-full bg-[#B7F000] px-7 py-3.5 font-semibold text-[#07142F] transition-colors hover:bg-[#a6e000] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B7F000]"
+              >
+                Create Your Portfolio →
+              </Link>
             </div>
-          ))}
-        </dl>
+          </div>
+
+          <div className="relative hidden md:block" aria-hidden>
+            <div className="ml-auto w-fit rounded-2xl border border-white/15 bg-white/[0.06] p-5 backdrop-blur">
+              <p className="text-sm font-semibold text-white">Create Your Portfolio</p>
+              <p className="mt-1 text-xs text-[#94a3b8]">
+                Upload your CV, resume or project document to get started.
+              </p>
+              <div className="mt-4 rounded-xl border-2 border-dashed border-white/25 px-6 py-6 text-center">
+                <p className="text-xs text-white">Drag & drop your file here</p>
+                <p className="mt-1 text-[11px] text-[#94a3b8]">or click to upload</p>
+              </div>
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                {["Upload CV / Resume", "Upload Project", "Take a Photo"].map((t) => (
+                  <div key={t} className="rounded-lg bg-white/10 px-2 py-2.5 text-[10px] leading-tight text-white">
+                    {t}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <ul className="absolute -left-2 top-2 space-y-2">
+              {FILE_BADGES.map((f) => (
+                <li
+                  key={f.label}
+                  className={`rounded-lg ${f.bg} px-2.5 py-1.5 text-xs font-bold text-white shadow-lg`}
+                >
+                  {f.label}
+                </li>
+              ))}
+            </ul>
+            <p className="absolute -bottom-2 left-0 max-w-[180px] text-xs italic leading-snug text-[#94a3b8]">
+              From your files… to a global-ready portfolio.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
