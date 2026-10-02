@@ -11,14 +11,14 @@ export const metadata = {
 
 export default function PricingPage() {
   return (
-    <>
+    <div className="bg-[#040b1e]">
       <Navbar />
       <main className="mx-auto w-full max-w-6xl px-6 py-10">
-        <Link href="/" className="text-sm text-[#64748B] hover:text-[#0F172A]">
+        <Link href="/" className="text-sm text-[#93a4c4] hover:text-white">
           ← Back
         </Link>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">Pricing</h1>
-        <p className="mt-2 max-w-2xl text-[#64748B]">
+        <h1 className="mt-4 text-4xl font-bold tracking-tight text-white">Pricing</h1>
+        <p className="mt-2 max-w-2xl text-[#93a4c4]">
           Subscriptions grant monthly credit allocations into an immutable
           ledger wallet. Basic UI actions (recolor, reorder, manual edits) never
           consume credits.
@@ -27,6 +27,6 @@ export default function PricingPage() {
       <Pricing />
       <CTA />
       <Footer />
-    </>
+    </div>
   );
 }

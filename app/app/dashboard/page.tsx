@@ -5,34 +5,34 @@ import { demoPortfolios, demoUser } from "@/lib/demo";
 
 export const metadata = { title: "Dashboard" };
 
-export default function DashboardPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ empty?: string }>;
-}) {
-  void searchParams;
-  // ?empty=1 previews the empty state. Real data wiring lands with auth + DB.
-  const showEmpty = false;
-  const portfolios = showEmpty ? [] : demoPortfolios;
+export default function DashboardPage() {
+  // Real data wiring lands with auth + DB.
+  const portfolios = demoPortfolios;
 
   return (
     <main className="py-2">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] md:text-3xl">
-            Ready to build your next portfolio?
-          </h1>
-          <p className="mt-1 text-sm text-[#64748B]">
-            {demoUser.credits} credits · {demoUser.plan} plan · sample data for
-            development
-          </p>
+      <div className="relative overflow-hidden rounded-2xl bg-[#07142F] p-6 text-white md:p-8">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute -right-10 -top-16 h-48 w-72 rounded-full bg-[#2563EB]/40 blur-[80px]" />
+          <div className="absolute -bottom-20 left-1/4 h-40 w-72 rounded-full bg-[#7c3aed]/30 blur-[80px]" />
         </div>
-        <Link
-          href="/app/create"
-          className="rounded-xl bg-[#2563EB] px-5 py-2.5 font-semibold text-white hover:bg-[#1d4ed8]"
-        >
-          Create Portfolio
-        </Link>
+        <div className="relative flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+              Ready to build your next portfolio?
+            </h1>
+            <p className="mt-1.5 text-sm text-[#93a4c4]">
+              {demoUser.credits} credits · {demoUser.plan} plan · sample data for
+              development
+            </p>
+          </div>
+          <Link
+            href="/app/create"
+            className="rounded-full bg-[#B7F000] px-5 py-2.5 text-sm font-semibold text-[#07142F] shadow-[0_0_28px_rgba(183,240,0,0.35)] transition-shadow hover:shadow-[0_0_44px_rgba(183,240,0,0.55)]"
+          >
+            Create Portfolio
+          </Link>
+        </div>
       </div>
 
       <section aria-label="Portfolios" className="mt-6">

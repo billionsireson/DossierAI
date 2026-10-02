@@ -2,6 +2,7 @@
 
 @theme {
   --color-navy: #07142f;
+  --color-abyss: #040b1e;
   --color-royal: #2563eb;
   --color-lime-accent: #b7f000;
   --color-surface: #f7fafc;
@@ -13,4 +14,111 @@
 
 body {
   font-family: var(--font-sans);
+}
+
+::selection {
+  background: #b7f000;
+  color: #07142f;
+}
+
+/* Ambient motion */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes float-y-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, -24px) scale(1.08);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-float {
+  animation: float-y 7s ease-in-out infinite;
+}
+.animate-float-soft {
+  animation: float-y-soft 6s ease-in-out infinite;
+}
+.animate-drift {
+  animation: drift 14s ease-in-out infinite;
+}
+.animate-glow-pulse {
+  animation: glow-pulse 5s ease-in-out infinite;
+}
+
+/* Mouse-tracking spotlight for cards */
+.spotlight {
+  position: relative;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(96, 165, 250, 0.22),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 0;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+.spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Blueprint grid overlay for dark sections */
+.bg-blueprint {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-soft,
+  .animate-drift,
+  .animate-glow-pulse {
+    animation: none;
+  }
+  .spotlight::before {
+    display: none;
+  }
 }

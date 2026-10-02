@@ -37,6 +37,9 @@ yarn-error.log*
 # uploads (local dev driver)
 .uploads/
 
+# local dev server log
+.devserver.log
+
 # vercel
 .vercel
 
