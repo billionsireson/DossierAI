@@ -4,11 +4,10 @@
  * Full zod-based validation lands with Prisma + Auth wiring.
  */
 
-function required(name: string, value: string | undefined, opts?: { public?: boolean }): string {
+function required(name: string, value: string | undefined): string {
   if (!value || value.length === 0) {
-    if (process.env.NODE_ENV === "production" && !opts?.public) {
-      throw new Error(`Missing required environment variable: ${name}`);
-    }
+    // Never throw at import time: `next build` must stay green without a live
+    // database. Callers that need the value (getDb) throw at request time.
     return "";
   }
   return value;

@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# uploads (local dev driver)
+.uploads/
+
 # vercel
 .vercel
 
