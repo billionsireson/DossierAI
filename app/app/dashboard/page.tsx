@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { PortfolioCard } from "@/components/dashboard/portfolio-card";
 import { EmptyPortfolios } from "@/components/dashboard/empty-state";
-import { demoPortfolios, demoUser } from "@/lib/demo";
+import { demoUser } from "@/lib/demo";
+import { listPortfolios } from "@/lib/portfolio/store";
 
+export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
 
 export default function DashboardPage() {
-  // Real data wiring lands with auth + DB.
-  const portfolios = demoPortfolios;
+  const portfolios = listPortfolios();
 
   return (
     <main className="py-2">

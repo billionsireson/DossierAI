@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PortfolioRenderer } from "@/components/portfolio/renderer";
-import { demoPortfolios } from "@/lib/demo";
+import { getPortfolio } from "@/lib/portfolio/store";
 import { getPublicationBySlug } from "@/lib/publishing/store";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 async function resolvePortfolio(slug: string) {
   const pub = getPublicationBySlug(slug);
   if (!pub) return null;
-  return demoPortfolios.find((p) => p.id === pub.portfolioId) ?? null;
+  return getPortfolio(pub.portfolioId);
 }
 
 export async function generateMetadata({

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PortfolioRenderer, TEMPLATE_IDS, isTemplateId } from "@/components/portfolio/renderer";
 import { PublishButton } from "@/components/publish/publish-button";
+import { getPortfolio } from "@/lib/portfolio/store";
 import { demoPortfolios } from "@/lib/demo";
 
 export const metadata = { title: "Preview" };
@@ -22,7 +23,7 @@ export default async function PreviewPage({
   const { id } = await params;
   const sp = (await searchParams) ?? {};
   const template = sp.template && isTemplateId(sp.template) ? sp.template : undefined;
-  const portfolio = demoPortfolios.find((p) => p.id === id) ?? demoPortfolios[0];
+  const portfolio = getPortfolio(id) ?? demoPortfolios[0];
   const active = template ?? portfolio.theme.templateId;
 
   return (

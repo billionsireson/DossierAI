@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { demoPortfolios } from "@/lib/demo";
+import { getPortfolio } from "@/lib/portfolio/store";
 import { getPublicationBySlug } from "@/lib/publishing/store";
 
 export const runtime = "nodejs";
@@ -11,9 +11,7 @@ export async function GET(
 ) {
   const { slug } = await params;
   const pub = getPublicationBySlug(slug);
-  const portfolio = pub
-    ? (demoPortfolios.find((p) => p.id === pub.portfolioId) ?? null)
-    : null;
+  const portfolio = pub ? getPortfolio(pub.portfolioId) : null;
   if (!portfolio) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
