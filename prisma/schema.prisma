@@ -1,0 +1,207 @@
+// DossierAI Prisma schema — PRD §41–§43.
+// Provider: PostgreSQL. Keep billing/credits separate from UI logic.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  FREE
+  PRO
+  PREMIUM
+}
+
+enum PublishingStatus {
+  DRAFT
+  PUBLISHED
+  UNPUBLISHED
+}
+
+enum PublishingPlan {
+  FREE
+  PRO
+  PREMIUM
+  LIFETIME
+}
+
+enum AIJobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  plan      Plan     @default(FREE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subscriptions      Subscription[]
+  creditTransactions CreditTransaction[]
+  sourceDocuments    SourceDocument[]
+  extractedProfiles  ExtractedProfile[]
+  portfolios         Portfolio[]
+  aiJobs             AIJob[]
+  usageEvents        UsageEvent[]
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan      Plan
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CreditTransaction {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String
+  amount        Int
+  referenceType String?
+  referenceId   String?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SourceDocument {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileName  String
+  mimeType  String
+  sizeBytes Int
+  storageKey String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model ExtractedProfile {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  data      Json
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Portfolio {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug      String   @unique
+  data      Json
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  versions   PortfolioVersion[]
+  sections   PortfolioSection[]
+  assets     PortfolioAsset[]
+  publication Publication?
+
+  @@index([userId])
+}
+
+model PortfolioVersion {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  version     Int
+  data        Json
+  note        String?
+  createdAt   DateTime  @default(now())
+
+  @@index([portfolioId])
+}
+
+model PortfolioSection {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  type        String
+  order       Int
+  visible     Boolean   @default(true)
+  content     Json
+
+  @@index([portfolioId])
+}
+
+model PortfolioAsset {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  kind        String
+  url         String
+  createdAt   DateTime  @default(now())
+
+  @@index([portfolioId])
+}
+
+model Template {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Publication {
+  id             String           @id @default(cuid())
+  portfolioId    String           @unique
+  portfolio      Portfolio        @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  slug           String           @unique
+  status         PublishingStatus @default(DRAFT)
+  publishingPlan PublishingPlan   @default(FREE)
+  publishedAt    DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model AIJob {
+  id             String      @id @default(cuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           String
+  status         AIJobStatus @default(QUEUED)
+  inputReference String?
+  outputReference String?
+  creditsUsed    Int         @default(0)
+  error          String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model UsageEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([event])
+}
