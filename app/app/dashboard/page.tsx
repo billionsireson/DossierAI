@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PortfolioCard } from "@/components/dashboard/portfolio-card";
 import { EmptyPortfolios } from "@/components/dashboard/empty-state";
 import { demoUser } from "@/lib/demo";
+import { balance } from "@/lib/credits/ledger";
 import { listPortfolios } from "@/lib/portfolio/store";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,7 @@ export const metadata = { title: "Dashboard" };
 
 export default function DashboardPage() {
   const portfolios = listPortfolios();
+  const credits = balance(demoUser.id);
 
   return (
     <main className="py-2">
@@ -23,7 +25,7 @@ export default function DashboardPage() {
               Ready to build your next portfolio?
             </h1>
             <p className="mt-1.5 text-sm text-[#93a4c4]">
-              {demoUser.credits} credits · {demoUser.plan} plan · sample data for
+              {credits} credits · {demoUser.plan} plan · sample data for
               development
             </p>
           </div>

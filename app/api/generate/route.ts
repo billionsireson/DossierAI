@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ExtractedProfileSchema } from "@/types/extracted-profile";
 import { buildPortfolio } from "@/lib/portfolio/build";
 import { PortfolioSchema, qualityGate } from "@/lib/portfolio/validate";
+import { spend } from "@/lib/credits/ledger";
 
 export const runtime = "nodejs";
 
@@ -31,6 +32,7 @@ export async function POST(req: Request) {
   }
 
   // Strict retry-style gate (PRD §53): build → validate → quality, no silent repair.
+  // Credits are spent only for successful generations (PRD §26).
   const templateId = ALLOWED_TEMPLATES.has(parsed.data.templateId)
     ? parsed.data.templateId
     : "modern-professional";
@@ -54,5 +56,12 @@ export async function POST(req: Request) {
       { status: 422 },
     );
   }
-  return NextResponse.json({ status: "generated", portfolio });
+  const payment = spend("demo-user", "generation");
+  if (!payment.ok) {
+    return NextResponse.json(
+      { error: "You don't have enough credits for this AI action.", ...payment },
+      { status: 402 },
+    );
+  }
+  return NextResponse.json({ status: "generated", portfolio, credits: payment.tx });
 }
