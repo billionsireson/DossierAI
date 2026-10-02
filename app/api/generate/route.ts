@@ -4,6 +4,8 @@ import { ExtractedProfileSchema } from "@/types/extracted-profile";
 import { buildPortfolio } from "@/lib/portfolio/build";
 import { PortfolioSchema, qualityGate } from "@/lib/portfolio/validate";
 import { spend } from "@/lib/credits/ledger";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import { track } from "@/lib/analytics/events";
 
 export const runtime = "nodejs";
 
@@ -20,6 +22,13 @@ const ALLOWED_TEMPLATES = new Set([
 ]);
 
 export async function POST(req: Request) {
+  const limit = checkRateLimit(rateLimitKey(req, "ai"), "ai");
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please slow down and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
   let body: unknown;
   try {
     body = await req.json();
@@ -58,10 +67,12 @@ export async function POST(req: Request) {
   }
   const payment = spend("demo-user", "generation");
   if (!payment.ok) {
+    track("portfolio_generation_failed", { reason: "insufficient_credits" });
     return NextResponse.json(
       { error: "You don't have enough credits for this AI action.", ...payment },
       { status: 402 },
     );
   }
+  track("portfolio_generated", { templateId });
   return NextResponse.json({ status: "generated", portfolio, credits: payment.tx });
 }

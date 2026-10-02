@@ -6,10 +6,19 @@ import {
   validationMessage,
 } from "@/lib/documents/validation";
 import { getDb } from "@/lib/db";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import { track } from "@/lib/analytics/events";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
+  const limit = checkRateLimit(rateLimitKey(req, "upload"), "upload");
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many uploads. Please slow down and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
   let form: FormData;
   try {
     form = await req.formData();
@@ -76,6 +85,7 @@ export async function POST(req: Request) {
       // Extraction job stub — full pipeline lands in Milestone 4.
       extractionJobId: `job_${randomUUID()}`,
     });
+    track("file_uploaded", { mimeType: file.type });
   }
 
   return NextResponse.json({ files: results });

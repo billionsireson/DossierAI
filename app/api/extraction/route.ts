@@ -5,6 +5,8 @@ import {
   parseStoredFile,
 } from "@/lib/extraction/extract";
 import { needsReview } from "@/types/extracted-profile";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import { track } from "@/lib/analytics/events";
 
 export const runtime = "nodejs";
 
@@ -15,6 +17,13 @@ const BodySchema = z.object({
 });
 
 export async function POST(req: Request) {
+  const limit = checkRateLimit(rateLimitKey(req, "ai"), "ai");
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please slow down and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
   let body: unknown;
   try {
     body = await req.json();
@@ -40,6 +49,7 @@ export async function POST(req: Request) {
   }
 
   const { profile, warnings } = await extractFromText({ text: doc.text, fileName });
+  track("file_extraction_completed", { fileName });
   return NextResponse.json({
     status: "ok",
     profile,
