@@ -40,6 +40,9 @@ yarn-error.log*
 # local dev server log
 .devserver.log
 
+# local file-backed stores (dev only)
+/data/
+
 # vercel
 .vercel
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PortfolioRenderer } from "@/components/portfolio/renderer";
+import { PublishButton } from "@/components/publish/publish-button";
 import { demoPortfolios } from "@/lib/demo";
 
 export const metadata = { title: "Preview" };
@@ -34,6 +35,9 @@ export default async function PreviewPage({
       <p className="mt-1 text-sm text-[#64748B]">
         Faithful to the published result. Template: {portfolio.theme.templateId}.
       </p>
+      <div className="mt-4">
+        <PublishButton portfolioId={portfolio.id} />
+      </div>
       <div className="mt-5">
         <PortfolioRenderer portfolio={portfolio} />
       </div>
