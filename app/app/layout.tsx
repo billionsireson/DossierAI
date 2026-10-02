@@ -9,6 +9,7 @@ const NAV = [
   { href: "/app/templates", label: "Templates" },
   { href: "/app/credits", label: "Credits" },
   { href: "/app/settings", label: "Settings" },
+  { href: "/app/admin", label: "Admin" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
