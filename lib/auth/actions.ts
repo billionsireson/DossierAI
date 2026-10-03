@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { getDb } from "@/lib/db";
 import { createSession, deleteSession } from "@/lib/auth/session";
+import { grant } from "@/lib/credits/ledger";
+import { PLANS } from "@/lib/billing/plans";
 import { LoginSchema, SignupSchema, type AuthFormState } from "@/lib/auth/validation";
 
 export async function signup(_state: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -28,6 +30,7 @@ export async function signup(_state: AuthFormState, formData: FormData): Promise
       plan: "FREE",
     },
   });
+  await grant(user.id, PLANS.FREE.creditsPerMonth, "bonus", "welcome");
   await createSession(user.id);
   redirect("/app/dashboard");
 }

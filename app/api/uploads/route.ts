@@ -8,6 +8,7 @@ import {
 import { getDb } from "@/lib/db";
 import { ensureDemoUser } from "@/lib/db/ensure";
 import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import { getCurrentUserId } from "@/lib/auth/current-user";
 import { track } from "@/lib/analytics/events";
 
 export const runtime = "nodejs";
@@ -61,12 +62,12 @@ export async function POST(req: Request) {
     // Best-effort DB record. Works without DATABASE_URL (dev preview).
     let documentId: string | null = null;
     try {
-      await ensureDemoUser();
+      const userId = await getCurrentUserId();
+      if (userId === "demo-user") await ensureDemoUser();
       const db = await getDb();
       const doc = await db.sourceDocument.create({
         data: {
-          // TODO(M2-auth): replace with session user id once login lands.
-          userId: "demo-user",
+          userId,
           fileName: file.name,
           mimeType: file.type,
           sizeBytes: stored.sizeBytes,

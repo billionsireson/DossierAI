@@ -128,11 +128,17 @@ export async function getPortfolio(id: string): Promise<Portfolio | null> {
   return row ? rowToPortfolio(row) : null;
 }
 
-export async function listPortfolios(): Promise<Portfolio[]> {
-  if (!dbEnabled()) return loadFile().portfolios;
+export async function listPortfolios(userId?: string): Promise<Portfolio[]> {
+  if (!dbEnabled()) {
+    const all = loadFile().portfolios;
+    return userId ? all.filter((p) => p.userId === userId) : all;
+  }
   await ensureSeeded();
   const db = await getDb();
-  const rows = await db.portfolio.findMany({ orderBy: { updatedAt: "desc" } });
+  const rows = await db.portfolio.findMany({
+    where: userId ? { userId } : undefined,
+    orderBy: { updatedAt: "desc" },
+  });
   return rows.map(rowToPortfolio);
 }
 

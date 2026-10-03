@@ -1,11 +1,12 @@
 import { PortfolioCard } from "@/components/dashboard/portfolio-card";
+import { getCurrentUserId } from "@/lib/auth/current-user";
 import { listPortfolios } from "@/lib/portfolio/store";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "My Portfolios" };
 
 export default async function PortfoliosPage() {
-  const portfolios = await listPortfolios();
+  const portfolios = await listPortfolios(await getCurrentUserId());
   return (
     <main className="py-2">
       <h1 className="text-2xl font-bold">My Portfolios</h1>

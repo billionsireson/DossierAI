@@ -4,6 +4,7 @@ import { ExtractedProfileSchema } from "@/types/extracted-profile";
 import { buildPortfolio } from "@/lib/portfolio/build";
 import { PortfolioSchema, qualityGate } from "@/lib/portfolio/validate";
 import { spend } from "@/lib/credits/ledger";
+import { getCurrentUserId } from "@/lib/auth/current-user";
 import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
 import { track } from "@/lib/analytics/events";
 
@@ -42,12 +43,13 @@ export async function POST(req: Request) {
 
   // Strict retry-style gate (PRD §53): build → validate → quality, no silent repair.
   // Credits are spent only for successful generations (PRD §26).
+  const userId = await getCurrentUserId();
   const templateId = ALLOWED_TEMPLATES.has(parsed.data.templateId)
     ? parsed.data.templateId
     : "modern-professional";
   const portfolio = buildPortfolio({
     profile: parsed.data.profile,
-    userId: "demo-user",
+    userId,
     templateId,
   });
 
@@ -65,7 +67,7 @@ export async function POST(req: Request) {
       { status: 422 },
     );
   }
-  const payment = await spend("demo-user", "generation");
+  const payment = await spend(userId, "generation");
   if (!payment.ok) {
     track("portfolio_generation_failed", { reason: "insufficient_credits" });
     return NextResponse.json(

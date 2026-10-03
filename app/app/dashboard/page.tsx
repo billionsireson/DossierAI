@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PortfolioCard } from "@/components/dashboard/portfolio-card";
 import { EmptyPortfolios } from "@/components/dashboard/empty-state";
+import { getCurrentUser, getCurrentUserId } from "@/lib/auth/current-user";
 import { demoUser } from "@/lib/demo";
 import { balance } from "@/lib/credits/ledger";
 import { listPortfolios } from "@/lib/portfolio/store";
@@ -9,8 +10,11 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
-  const portfolios = await listPortfolios();
-  const credits = await balance(demoUser.id);
+  const userId = await getCurrentUserId();
+  const user = await getCurrentUser();
+  const portfolios = await listPortfolios(userId);
+  const credits = await balance(userId);
+  const name = user?.name ?? demoUser.name;
 
   return (
     <main className="py-2">
@@ -22,11 +26,11 @@ export default async function DashboardPage() {
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-              Ready to build your next portfolio?
+              Ready to build your next portfolio{user ? `, ${name.split(" ")[0]}` : ""}?
             </h1>
             <p className="mt-1.5 text-sm text-[#93a4c4]">
-              {credits} credits · {demoUser.plan} plan · sample data for
-              development
+              {credits} credits · {user?.plan ?? demoUser.plan} plan
+              {!user && " · sample data for development"}
             </p>
           </div>
           <Link

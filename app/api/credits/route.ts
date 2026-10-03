@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import { balance, grant, history } from "@/lib/credits/ledger";
+import { getCurrentUserId } from "@/lib/auth/current-user";
 
 export const runtime = "nodejs";
 
-const DEMO_USER = "demo-user";
-
 export async function GET() {
-  // TODO(auth): derive userId from session.
-  return NextResponse.json({ balance: await balance(DEMO_USER), history: await history(DEMO_USER) });
+  const userId = await getCurrentUserId();
+  return NextResponse.json({ balance: await balance(userId), history: await history(userId) });
 }
 
 export async function POST(req: Request) {
@@ -23,6 +22,7 @@ export async function POST(req: Request) {
   if (!Number.isInteger(amount) || amount <= 0 || amount > 1000) {
     return NextResponse.json({ error: "Amount must be 1–1000." }, { status: 400 });
   }
-  const tx = await grant(DEMO_USER, amount, "bonus", "demo-grant");
-  return NextResponse.json({ balance: await balance(DEMO_USER), tx });
+  const userId = await getCurrentUserId();
+  const tx = await grant(userId, amount, "bonus", "demo-grant");
+  return NextResponse.json({ balance: await balance(userId), tx });
 }

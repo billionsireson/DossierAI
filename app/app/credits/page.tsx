@@ -1,4 +1,5 @@
 import { balance, history } from "@/lib/credits/ledger";
+import { getCurrentUser, getCurrentUserId } from "@/lib/auth/current-user";
 import { PLANS } from "@/lib/billing/plans";
 import { demoUser } from "@/lib/demo";
 
@@ -6,8 +7,10 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Credits" };
 
 export default async function CreditsPage() {
-  const bal = await balance(demoUser.id);
-  const txs = await history(demoUser.id);
+  const userId = await getCurrentUserId();
+  const user = await getCurrentUser();
+  const bal = await balance(userId);
+  const txs = await history(userId);
 
   return (
     <main className="py-2">
@@ -16,7 +19,7 @@ export default async function CreditsPage() {
         <p className="text-sm text-[#64748B]">Balance</p>
         <p className="mt-1 text-4xl font-bold">{bal}</p>
         <p className="mt-3 text-sm text-[#64748B]">
-          {demoUser.plan} plan · {PLANS[demoUser.plan].creditsPerMonth} credits/month.
+          {user?.plan ?? demoUser.plan} plan · {PLANS[(user?.plan ?? demoUser.plan) as keyof typeof PLANS].creditsPerMonth} credits/month.
           Generation, regeneration and AI rewrites consume credits; manual
           edits never do.
         </p>

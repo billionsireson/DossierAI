@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { LogoLockup } from "@/components/logo";
+import { getCurrentUser, getCurrentUserId } from "@/lib/auth/current-user";
 import { demoUser } from "@/lib/demo";
+import { balance } from "@/lib/credits/ledger";
 
 const NAV = [
   { href: "/app/dashboard", label: "Home" },
@@ -12,7 +14,11 @@ const NAV = [
   { href: "/app/admin", label: "Admin" },
 ];
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
+  const credits = await balance(await getCurrentUserId());
+  const name = user?.name ?? demoUser.name;
+  const plan = user?.plan ?? demoUser.plan;
   return (
     <div className="min-h-screen bg-[#F7FAFC]">
       <div className="mx-auto flex w-full max-w-6xl gap-6 px-6 py-6">
@@ -33,8 +39,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             ))}
           </nav>
           <div className="mt-auto rounded-xl bg-white/10 p-3 text-sm">
-            <p className="font-semibold text-white">{demoUser.name}</p>
-            <p className="text-xs text-[#94a3b8]">{demoUser.plan} · {demoUser.credits} credits</p>
+            <p className="font-semibold text-white">{name}</p>
+            <p className="text-xs text-[#94a3b8]">{plan} · {credits} credits</p>
           </div>
         </aside>
         <div className="min-w-0 flex-1">{children}</div>
