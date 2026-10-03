@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const portfolio = getPortfolio(id);
+  const portfolio = await getPortfolio(id);
   if (!portfolio) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ portfolio });
 }
@@ -62,7 +62,7 @@ export async function PATCH(
   }
   const { note, ...patch } = parsed.data;
   // Sections originate from our own store shape; the union cast is safe here.
-  const candidate = buildUpdated(id, {
+  const candidate = await buildUpdated(id, {
     ...patch,
     sections: patch.sections as PortfolioSection[] | undefined,
   });
@@ -75,7 +75,7 @@ export async function PATCH(
       { status: 422 },
     );
   }
-  const updated = updatePortfolio(
+  const updated = await updatePortfolio(
     id,
     { ...patch, sections: patch.sections as PortfolioSection[] | undefined },
     note,

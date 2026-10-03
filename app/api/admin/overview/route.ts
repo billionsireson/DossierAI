@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   if (!isAdminRequest(req)) {
     return NextResponse.json({ error: "Forbidden." }, { status: 403 });
   }
-  const portfolios = listPortfolios();
+  const portfolios = await listPortfolios();
   let uploads: { file: string; bytes: number }[] = [];
   try {
     const dir = path.join(process.cwd(), ".uploads");
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
       version: p.version,
       status: p.publishing.status,
     })),
-    credits: { userId: demoUser.id, balance: balance(demoUser.id), recent: history(demoUser.id, 10) },
+    credits: { userId: demoUser.id, balance: await balance(demoUser.id), recent: await history(demoUser.id, 10) },
     uploads: uploads.sort((a, b) => b.bytes - a.bytes).slice(0, 20),
   });
 }

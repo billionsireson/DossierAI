@@ -4,8 +4,8 @@ import { listPortfolios } from "@/lib/portfolio/store";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "My Portfolios" };
 
-export default function PortfoliosPage() {
-  const portfolios = listPortfolios();
+export default async function PortfoliosPage() {
+  const portfolios = await listPortfolios();
   return (
     <main className="py-2">
       <h1 className="text-2xl font-bold">My Portfolios</h1>

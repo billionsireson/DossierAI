@@ -8,9 +8,9 @@ import { listPortfolios } from "@/lib/portfolio/store";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
 
-export default function DashboardPage() {
-  const portfolios = listPortfolios();
-  const credits = balance(demoUser.id);
+export default async function DashboardPage() {
+  const portfolios = await listPortfolios();
+  const credits = await balance(demoUser.id);
 
   return (
     <main className="py-2">

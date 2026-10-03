@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       { status: 422 },
     );
   }
-  const payment = spend("demo-user", "generation");
+  const payment = await spend("demo-user", "generation");
   if (!payment.ok) {
     track("portfolio_generation_failed", { reason: "insufficient_credits" });
     return NextResponse.json(

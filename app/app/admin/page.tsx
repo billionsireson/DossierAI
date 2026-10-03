@@ -21,9 +21,9 @@ export default async function AdminPage() {
       </main>
     );
   }
-  const portfolios = listPortfolios();
-  const bal = balance(demoUser.id);
-  const txs = history(demoUser.id, 10);
+  const portfolios = await listPortfolios();
+  const bal = await balance(demoUser.id);
+  const txs = await history(demoUser.id, 10);
 
   return (
     <main className="py-2">

@@ -1,6 +1,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { demoPortfolios } from "@/lib/demo";
+import { isDbConfigured } from "@/lib/env";
+import { getDb } from "@/lib/db";
+import { ensureDemoUser } from "@/lib/db/ensure";
 import type { Portfolio, PortfolioSection } from "@/types/portfolio";
 
 export type PortfolioVersionRecord = {
@@ -9,6 +12,18 @@ export type PortfolioVersionRecord = {
   data: Portfolio;
   createdAt: string;
 };
+
+export type PortfolioPatch = {
+  profile?: Partial<Portfolio["profile"]>;
+  theme?: Partial<Portfolio["theme"]>;
+  socialLinks?: Portfolio["socialLinks"];
+  sections?: PortfolioSection[];
+  slug?: string;
+};
+
+function dbEnabled(): boolean { return isDbConfigured(); }
+
+// ---------- File driver (dev without DB, and test path) ----------
 
 type StoreShape = {
   portfolios: Portfolio[];
@@ -20,7 +35,7 @@ function storeFile(): string {
   return path.join(process.cwd(), "data", path.basename(name));
 }
 
-function seed(): StoreShape {
+function seedShape(): StoreShape {
   const versions: Record<string, PortfolioVersionRecord[]> = {};
   for (const p of demoPortfolios) {
     versions[p.id] = [
@@ -30,7 +45,7 @@ function seed(): StoreShape {
   return { portfolios: demoPortfolios, versions };
 }
 
-function load(): StoreShape {
+function loadFile(): StoreShape {
   const file = storeFile();
   try {
     if (existsSync(file)) {
@@ -40,36 +55,93 @@ function load(): StoreShape {
   } catch {
     // Corrupt → reseed.
   }
-  const seeded = seed();
-  save(seeded);
+  const seeded = seedShape();
+  mkdirSync(path.dirname(file), { recursive: true });
+  writeFileSync(file, JSON.stringify(seeded, null, 2));
   return seeded;
 }
 
-function save(shape: StoreShape): void {
+function saveFile(shape: StoreShape): void {
   const file = storeFile();
   mkdirSync(path.dirname(file), { recursive: true });
   writeFileSync(file, JSON.stringify(shape, null, 2));
 }
 
-export function getPortfolio(id: string): Portfolio | null {
-  return load().portfolios.find((p) => p.id === id) ?? null;
+// ---------- Prisma driver (live Neon) ----------
+
+async function ensureSeeded(): Promise<void> {
+  const db = await getDb();
+  const count = await db.portfolio.count();
+  if (count > 0) return;
+  await ensureDemoUser();
+  for (const p of demoPortfolios) {
+    await db.portfolio.create({
+      data: {
+        id: p.id,
+        userId: p.userId,
+        slug: p.slug,
+        data: p as unknown as object,
+        version: p.version,
+      },
+    });
+    await db.portfolioVersion.create({
+      data: {
+        portfolioId: p.id,
+        version: p.version,
+        data: p as unknown as object,
+        note: "Seeded sample",
+      },
+    });
+    if (p.publishing.status === "published") {
+      await db.publication.create({
+        data: {
+          portfolioId: p.id,
+          slug: p.slug,
+          status: "PUBLISHED",
+          publishingPlan: "FREE",
+          publishedAt: p.publishing.publishedAt
+            ? new Date(p.publishing.publishedAt)
+            : new Date(),
+        },
+      });
+    }
+  }
 }
 
-export function listPortfolios(): Portfolio[] {
-  return load().portfolios;
+function rowToPortfolio(row: {
+  id: string;
+  userId: string;
+  slug: string;
+  data: unknown;
+  version: number;
+}): Portfolio {
+  return { ...(row.data as Portfolio), id: row.id, userId: row.userId, slug: row.slug, version: row.version };
 }
 
-export type PortfolioPatch = {
-  profile?: Partial<Portfolio["profile"]>;
-  theme?: Partial<Portfolio["theme"]>;
-  socialLinks?: Portfolio["socialLinks"];
-  sections?: PortfolioSection[];
-  slug?: string;
-};
+// ---------- Public API (dual-path) ----------
+
+export async function getPortfolio(id: string): Promise<Portfolio | null> {
+  if (!dbEnabled()) return loadFile().portfolios.find((p) => p.id === id) ?? null;
+  await ensureSeeded();
+  const db = await getDb();
+  const row = await db.portfolio.findUnique({ where: { id } });
+  return row ? rowToPortfolio(row) : null;
+}
+
+export async function listPortfolios(): Promise<Portfolio[]> {
+  if (!dbEnabled()) return loadFile().portfolios;
+  await ensureSeeded();
+  const db = await getDb();
+  const rows = await db.portfolio.findMany({ orderBy: { updatedAt: "desc" } });
+  return rows.map(rowToPortfolio);
+}
 
 /** Pure merge without persisting — lets callers validate before committing. */
-export function buildUpdated(id: string, patch: PortfolioPatch): Portfolio | null {
-  const current = load().portfolios.find((p) => p.id === id);
+export async function buildUpdated(
+  id: string,
+  patch: PortfolioPatch,
+): Promise<Portfolio | null> {
+  const current = await getPortfolio(id);
   if (!current) return null;
   const defined = Object.fromEntries(
     Object.entries(patch).filter(([, v]) => v !== undefined),
@@ -82,35 +154,70 @@ export function buildUpdated(id: string, patch: PortfolioPatch): Portfolio | nul
   };
 }
 
-function commit(next: Portfolio, note?: string): Portfolio {
-  const shape = load();
-  const idx = shape.portfolios.findIndex((p) => p.id === next.id);
-  const stamped: Portfolio = { ...next, version: next.version + 1 };
-  shape.portfolios[idx] = stamped;
-  const history = shape.versions[next.id] ?? [];
-  history.push({
-    version: stamped.version,
-    note,
-    data: stamped,
-    createdAt: new Date().toISOString(),
-  });
-  shape.versions[next.id] = history.slice(-20);
-  save(shape);
-  // TODO(Neon): persist Portfolio + PortfolioVersion via Prisma.
-  return stamped;
-}
-
-/** Apply a partial update, bump version, snapshot. Caps history at 20. */
-export function updatePortfolio(
+export async function updatePortfolio(
   id: string,
   patch: PortfolioPatch,
   note?: string,
-): Portfolio | null {
-  const next = buildUpdated(id, patch);
+): Promise<Portfolio | null> {
+  const next = await buildUpdated(id, patch);
   if (!next) return null;
-  return commit(next, note);
+  if (!dbEnabled()) {
+    const shape = loadFile();
+    const idx = shape.portfolios.findIndex((p) => p.id === next.id);
+    const stamped: Portfolio = { ...next, version: next.version + 1 };
+    shape.portfolios[idx] = stamped;
+    const history = shape.versions[next.id] ?? [];
+    history.push({
+      version: stamped.version,
+      note,
+      data: stamped,
+      createdAt: new Date().toISOString(),
+    });
+    shape.versions[next.id] = history.slice(-20);
+    saveFile(shape);
+    return stamped;
+  }
+  const db = await getDb();
+  const stamped: Portfolio = { ...next, version: next.version + 1 };
+  await db.portfolio.update({
+    where: { id },
+    data: {
+      slug: stamped.slug,
+      data: stamped as unknown as object,
+      version: stamped.version,
+    },
+  });
+  await db.portfolioVersion.create({
+    data: {
+      portfolioId: id,
+      version: stamped.version,
+      data: stamped as unknown as object,
+      note,
+    },
+  });
+  const old = await db.portfolioVersion.findMany({
+    where: { portfolioId: id },
+    orderBy: { version: "desc" },
+    select: { id: true },
+  });
+  const drop = old.slice(20);
+  if (drop.length > 0) {
+    await db.portfolioVersion.deleteMany({ where: { id: { in: drop.map((d) => d.id) } } });
+  }
+  return stamped;
 }
 
-export function listVersions(id: string): PortfolioVersionRecord[] {
-  return load().versions[id] ?? [];
+export async function listVersions(id: string): Promise<PortfolioVersionRecord[]> {
+  if (!dbEnabled()) return loadFile().versions[id] ?? [];
+  const db = await getDb();
+  const rows = await db.portfolioVersion.findMany({
+    where: { portfolioId: id },
+    orderBy: { version: "asc" },
+  });
+  return rows.map((r) => ({
+    version: r.version,
+    note: r.note ?? undefined,
+    data: r.data as unknown as Portfolio,
+    createdAt: r.createdAt.toISOString(),
+  }));
 }

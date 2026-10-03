@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
-import { demoPortfolios } from "@/lib/demo";
+import { isDbConfigured } from "@/lib/env";
+import { getDb } from "@/lib/db";
 import { toSlug } from "@/types/portfolio";
 
 export type PublicationRecord = {
@@ -10,28 +11,16 @@ export type PublicationRecord = {
   publishedAt?: string;
 };
 
-/**
- * M8 publishing store. File-backed JSON so publications are visible across
- * route modules (dev code-splitting) and server restarts. Prisma-backed
- * persistence replaces this once Neon is wired (docs/database.md).
- */
+function dbEnabled(): boolean { return isDbConfigured(); }
+
+// ---------- File driver ----------
+
 function storeFile(): string {
   const name = process.env.PUBLICATIONS_FILE ?? "publications.json";
   return path.join(process.cwd(), "data", path.basename(name));
 }
 
-function seed(): PublicationRecord[] {
-  return demoPortfolios
-    .filter((p) => p.publishing.status === "published")
-    .map((p) => ({
-      portfolioId: p.id,
-      slug: p.slug,
-      status: "published" as const,
-      publishedAt: p.publishing.publishedAt,
-    }));
-}
-
-function load(): PublicationRecord[] {
+function loadFile(): PublicationRecord[] {
   const file = storeFile();
   try {
     if (existsSync(file)) {
@@ -39,35 +28,57 @@ function load(): PublicationRecord[] {
       if (Array.isArray(raw)) return raw;
     }
   } catch {
-    // Corrupt file → reseed below.
+    // Corrupt → start empty (portfolio store seeds demo publications).
   }
-  const seeded = seed();
-  save(seeded);
-  return seeded;
+  return [];
 }
 
-function save(records: PublicationRecord[]): void {
+function saveFile(records: PublicationRecord[]): void {
   const file = storeFile();
   mkdirSync(path.dirname(file), { recursive: true });
   writeFileSync(file, JSON.stringify(records, null, 2));
 }
 
+// ---------- Shared ----------
+
+async function portfolioSlugs(): Promise<{ id: string; slug: string }[]> {
+  if (!dbEnabled()) {
+    const { listPortfolios } = await import("@/lib/portfolio/store");
+    return (await listPortfolios()).map((p) => ({ id: p.id, slug: p.slug }));
+  }
+  const db = await getDb();
+  return db.portfolio.findMany({ select: { id: true, slug: true } });
+}
+
 function slugTaken(
   records: PublicationRecord[],
+  others: { id: string; slug: string }[],
   slug: string,
   excludeId?: string,
 ): boolean {
-  if (records.some((r) => r.slug === slug && r.portfolioId !== excludeId)) {
-    return true;
-  }
-  return demoPortfolios.some((p) => p.slug === slug && p.id !== excludeId);
+  if (records.some((r) => r.slug === slug && r.portfolioId !== excludeId)) return true;
+  return others.some((p) => p.slug === slug && p.id !== excludeId);
 }
 
-export function uniqueSlug(base: string, excludeId?: string): string {
-  const records = load();
+export async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
+  const [records, others] = dbEnabled()
+    ? await (async () => {
+        const db = await getDb();
+        const pubs = await db.publication.findMany();
+        return [
+          pubs.map((p) => ({
+            portfolioId: p.portfolioId,
+            slug: p.slug,
+            status: p.status.toLowerCase() as PublicationRecord["status"],
+            publishedAt: p.publishedAt?.toISOString(),
+          })),
+          await portfolioSlugs(),
+        ] as const;
+      })()
+    : [loadFile(), await portfolioSlugs()];
   let slug = toSlug(base);
   let n = 2;
-  while (slugTaken(records, slug, excludeId)) {
+  while (slugTaken(records, others, slug, excludeId)) {
     slug = toSlug(`${base}-${n}`);
     n += 1;
     if (n > 100) throw new Error("Could not allocate a unique slug.");
@@ -75,40 +86,103 @@ export function uniqueSlug(base: string, excludeId?: string): string {
   return slug;
 }
 
-export function publish(portfolioId: string, requestedSlug?: string) {
-  const records = load();
-  const base =
-    requestedSlug ??
-    records.find((r) => r.portfolioId === portfolioId)?.slug ??
-    demoPortfolios.find((p) => p.id === portfolioId)?.slug ??
-    portfolioId;
-  const slug = uniqueSlug(base, portfolioId);
-  const record: PublicationRecord = {
+export async function publish(portfolioId: string, requestedSlug?: string) {
+  if (!dbEnabled()) {
+    const records = loadFile();
+    const { listPortfolios } = await import("@/lib/portfolio/store");
+    const base =
+      requestedSlug ??
+      records.find((r) => r.portfolioId === portfolioId)?.slug ??
+      (await listPortfolios()).find((p) => p.id === portfolioId)?.slug ??
+      portfolioId;
+    const slug = await uniqueSlug(base, portfolioId);
+    const record: PublicationRecord = {
+      portfolioId,
+      slug,
+      status: "published",
+      publishedAt: new Date().toISOString(),
+    };
+    saveFile([...records.filter((r) => r.portfolioId !== portfolioId), record]);
+    return record;
+  }
+  const db = await getDb();
+  const existing = await db.publication.findUnique({ where: { portfolioId } });
+  const portfolio = await db.portfolio.findUnique({ where: { id: portfolioId } });
+  const base = requestedSlug ?? existing?.slug ?? portfolio?.slug ?? portfolioId;
+  const slug = await uniqueSlug(base, portfolioId);
+  const record = await db.publication.upsert({
+    where: { portfolioId },
+    update: { slug, status: "PUBLISHED", publishedAt: new Date() },
+    create: {
+      portfolioId,
+      slug,
+      status: "PUBLISHED",
+      publishingPlan: "FREE",
+      publishedAt: new Date(),
+    },
+  });
+  await db.portfolio.updateMany({ where: { id: portfolioId }, data: { slug } });
+  return {
     portfolioId,
-    slug,
-    status: "published",
-    publishedAt: new Date().toISOString(),
+    slug: record.slug,
+    status: "published" as const,
+    publishedAt: record.publishedAt?.toISOString(),
   };
-  save([...records.filter((r) => r.portfolioId !== portfolioId), record]);
-  // TODO(Neon): upsert Publication + portfolio slug via Prisma.
-  return record;
 }
 
-export function unpublish(portfolioId: string) {
-  const records = load();
-  const existing = records.find((r) => r.portfolioId === portfolioId);
-  const record = existing
-    ? { ...existing, status: "unpublished" as const }
-    : { portfolioId, slug: uniqueSlug(portfolioId), status: "unpublished" as const };
-  save([...records.filter((r) => r.portfolioId !== portfolioId), record]);
-  return record;
+export async function unpublish(portfolioId: string) {
+  if (!dbEnabled()) {
+    const records = loadFile();
+    const existing = records.find((r) => r.portfolioId === portfolioId);
+    const record = existing
+      ? { ...existing, status: "unpublished" as const }
+      : { portfolioId, slug: await uniqueSlug(portfolioId), status: "unpublished" as const };
+    saveFile([...records.filter((r) => r.portfolioId !== portfolioId), record]);
+    return record;
+  }
+  const db = await getDb();
+  const existing = await db.publication.findUnique({ where: { portfolioId } });
+  if (!existing) {
+    return { portfolioId, slug: await uniqueSlug(portfolioId), status: "unpublished" as const };
+  }
+  const record = await db.publication.update({
+    where: { portfolioId },
+    data: { status: "UNPUBLISHED" },
+  });
+  return {
+    portfolioId,
+    slug: record.slug,
+    status: "unpublished" as const,
+    publishedAt: record.publishedAt?.toISOString(),
+  };
 }
 
-export function getPublicationBySlug(slug: string) {
-  const record = load().find((r) => r.slug === slug && r.status === "published");
-  return record ?? null;
+export async function getPublicationBySlug(slug: string) {
+  if (!dbEnabled()) {
+    return loadFile().find((r) => r.slug === slug && r.status === "published") ?? null;
+  }
+  const db = await getDb();
+  const record = await db.publication.findUnique({ where: { slug } });
+  if (!record || record.status !== "PUBLISHED") return null;
+  return {
+    portfolioId: record.portfolioId,
+    slug: record.slug,
+    status: "published" as const,
+    publishedAt: record.publishedAt?.toISOString(),
+  };
 }
 
-export function getPublication(portfolioId: string) {
-  return load().find((r) => r.portfolioId === portfolioId) ?? null;
+export async function getPublication(portfolioId: string) {
+  if (!dbEnabled()) {
+    return loadFile().find((r) => r.portfolioId === portfolioId) ?? null;
+  }
+  const db = await getDb();
+  const record = await db.publication.findUnique({ where: { portfolioId } });
+  if (!record) return null;
+  return {
+    portfolioId: record.portfolioId,
+    slug: record.slug,
+    status: record.status.toLowerCase() as PublicationRecord["status"],
+    publishedAt: record.publishedAt?.toISOString(),
+  };
 }

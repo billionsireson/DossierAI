@@ -23,7 +23,7 @@ export default async function PreviewPage({
   const { id } = await params;
   const sp = (await searchParams) ?? {};
   const template = sp.template && isTemplateId(sp.template) ? sp.template : undefined;
-  const portfolio = getPortfolio(id) ?? demoPortfolios[0];
+  const portfolio = await getPortfolio(id) ?? demoPortfolios[0];
   const active = template ?? portfolio.theme.templateId;
 
   return (

@@ -6,6 +6,7 @@ import {
   validationMessage,
 } from "@/lib/documents/validation";
 import { getDb } from "@/lib/db";
+import { ensureDemoUser } from "@/lib/db/ensure";
 import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
 import { track } from "@/lib/analytics/events";
 
@@ -60,6 +61,7 @@ export async function POST(req: Request) {
     // Best-effort DB record. Works without DATABASE_URL (dev preview).
     let documentId: string | null = null;
     try {
+      await ensureDemoUser();
       const db = await getDb();
       const doc = await db.sourceDocument.create({
         data: {

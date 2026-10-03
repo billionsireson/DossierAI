@@ -5,9 +5,9 @@ import { demoUser } from "@/lib/demo";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Credits" };
 
-export default function CreditsPage() {
-  const bal = balance(demoUser.id);
-  const txs = history(demoUser.id);
+export default async function CreditsPage() {
+  const bal = await balance(demoUser.id);
+  const txs = await history(demoUser.id);
 
   return (
     <main className="py-2">

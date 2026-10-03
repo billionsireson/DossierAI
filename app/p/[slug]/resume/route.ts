@@ -10,8 +10,8 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  const pub = getPublicationBySlug(slug);
-  const portfolio = pub ? getPortfolio(pub.portfolioId) : null;
+  const pub = await getPublicationBySlug(slug);
+  const portfolio = pub ? await getPortfolio(pub.portfolioId) : null;
   if (!portfolio) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }

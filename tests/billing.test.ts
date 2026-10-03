@@ -9,26 +9,26 @@ beforeEach(() => {
 });
 
 describe("credit ledger", () => {
-  it("derives balance from the immutable ledger", () => {
-    grant("u-credits-1", 10, "subscription_grant");
-    expect(balance("u-credits-1")).toBe(10);
-    const r = spend("u-credits-1", "generation");
+  it("derives balance from the immutable ledger", async () => {
+    await grant("u-credits-1", 10, "subscription_grant");
+    expect(await balance("u-credits-1")).toBe(10);
+    const r = await spend("u-credits-1", "generation");
     expect(r.ok).toBe(true);
-    expect(balance("u-credits-1")).toBe(9);
+    expect(await balance("u-credits-1")).toBe(9);
   });
 
-  it("refuses overspend without mutating", () => {
-    const r = spend("u-credits-broke", "generation");
+  it("refuses overspend without mutating", async () => {
+    const r = await spend("u-credits-broke", "generation");
     expect(r.ok).toBe(false);
     if (!r.ok) {
       expect(r.needed).toBe(1);
       expect(r.balance).toBe(0);
     }
-    expect(history("u-credits-broke")).toEqual([]);
+    expect(await history("u-credits-broke")).toEqual([]);
   });
 
-  it("rejects non-positive grants", () => {
-    expect(() => grant("u-credits-2", 0, "bonus")).toThrow();
+  it("rejects non-positive grants", async () => {
+    await expect(grant("u-credits-2", 0, "bonus")).rejects.toThrow();
   });
 
   it("gates premium templates by plan", () => {

@@ -9,7 +9,7 @@ export async function GET(
 ) {
   const { id } = await params;
   return NextResponse.json({
-    versions: listVersions(id).map((v) => ({
+    versions: (await listVersions(id)).map((v) => ({
       version: v.version,
       note: v.note,
       createdAt: v.createdAt,

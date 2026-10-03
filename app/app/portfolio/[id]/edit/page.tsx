@@ -11,7 +11,7 @@ export default async function EditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const portfolio = getPortfolio(id);
+  const portfolio = await getPortfolio(id);
   if (!portfolio) {
     return (
       <main className="py-2">
@@ -22,7 +22,7 @@ export default async function EditPage({
       </main>
     );
   }
-  const versions = listVersions(id);
+  const versions = await listVersions(id);
 
   return (
     <main className="py-2">

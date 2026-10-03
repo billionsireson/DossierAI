@@ -18,7 +18,7 @@ export async function POST(
   }
   const { id } = await params;
   try {
-    const record = publish(id);
+    const record = await publish(id);
     track("portfolio_published", { portfolioId: id });
     return NextResponse.json(record);
   } catch (e) {
@@ -34,5 +34,5 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  return NextResponse.json(unpublish(id));
+  return NextResponse.json(await unpublish(id));
 }

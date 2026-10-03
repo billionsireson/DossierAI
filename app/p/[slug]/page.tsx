@@ -8,7 +8,7 @@ import { getPublicationBySlug } from "@/lib/publishing/store";
 export const dynamic = "force-dynamic";
 
 async function resolvePortfolio(slug: string) {
-  const pub = getPublicationBySlug(slug);
+  const pub = await getPublicationBySlug(slug);
   if (!pub) return null;
   return getPortfolio(pub.portfolioId);
 }
