@@ -1,4 +1,5 @@
 import type { ExtractedProfile } from "@/types/extracted-profile";
+import { openAIProvider } from "@/lib/ai/openai-provider";
 
 /**
  * AI provider abstraction — PRD §47.
@@ -105,7 +106,8 @@ export const heuristicProvider: AIProvider = {
 };
 
 export function getProvider(): AIProvider {
-  // Vendor-backed provider plugs in here when AI_PROVIDER_API_KEY is set.
-  // Until then the heuristic keeps the pipeline demonstrable and honest.
+  // Vendor-backed OpenAI path when a key is configured (integration #1),
+  // deterministic heuristic otherwise. Both validate against the same schema.
+  if (process.env.AI_PROVIDER_API_KEY) return openAIProvider;
   return heuristicProvider;
 }
