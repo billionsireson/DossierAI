@@ -27,7 +27,7 @@ export const PLANS: Record<PlanId, PlanConfig> = {
   PRO: {
     id: "PRO",
     name: "Pro",
-    priceNGN: 4999,
+    priceNGN: 4998,
     creditsPerMonth: 50,
     templates: ["modern-professional", "creative-minimal", "corporate-executive"],
     maxPortfolios: 10,
@@ -45,7 +45,7 @@ export const PLANS: Record<PlanId, PlanConfig> = {
   PREMIUM: {
     id: "PREMIUM",
     name: "Premium",
-    priceNGN: 9999,
+    priceNGN: 9998,
     creditsPerMonth: 200,
     templates: ["modern-professional", "creative-minimal", "corporate-executive", "tech-developer", "digital-creator"],
     maxPortfolios: 50,

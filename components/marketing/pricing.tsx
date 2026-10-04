@@ -15,7 +15,7 @@ const PLANS = [
   {
     name: "Pro",
     desc: "For growing professionals",
-    price: "₦4,999",
+    price: "₦4,998",
     per: "/month",
     badge: "Most Popular",
     points: [
@@ -33,7 +33,7 @@ const PLANS = [
   {
     name: "Premium",
     desc: "For career & brand builders",
-    price: "₦9,999",
+    price: "₦9,998",
     per: "/month",
     points: [
       "All Pro features",
