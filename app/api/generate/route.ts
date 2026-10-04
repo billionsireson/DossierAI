@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ExtractedProfileSchema } from "@/types/extracted-profile";
 import { buildPortfolio } from "@/lib/portfolio/build";
 import { PortfolioSchema, qualityGate } from "@/lib/portfolio/validate";
+import { createPortfolio } from "@/lib/portfolio/store";
 import { spend } from "@/lib/credits/ledger";
 import { getCurrentUserId } from "@/lib/auth/current-user";
 import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
@@ -77,5 +78,6 @@ export async function POST(req: Request) {
     );
   }
   track("portfolio_generated", { templateId });
-  return NextResponse.json({ status: "generated", portfolio, credits: payment.tx });
+  const saved = await createPortfolio(portfolio);
+  return NextResponse.json({ status: "generated", portfolio: saved, credits: payment.tx });
 }

@@ -227,3 +227,40 @@ export async function listVersions(id: string): Promise<PortfolioVersionRecord[]
     createdAt: r.createdAt.toISOString(),
   }));
 }
+
+/** Persist a freshly generated portfolio as version 1. */
+export async function createPortfolio(portfolio: Portfolio): Promise<Portfolio> {
+  if (!dbEnabled()) {
+    const shape = loadFile();
+    shape.portfolios.push(portfolio);
+    shape.versions[portfolio.id] = [
+      {
+        version: portfolio.version,
+        note: "AI generated",
+        data: portfolio,
+        createdAt: new Date().toISOString(),
+      },
+    ];
+    saveFile(shape);
+    return portfolio;
+  }
+  const db = await getDb();
+  await db.portfolio.create({
+    data: {
+      id: portfolio.id,
+      userId: portfolio.userId,
+      slug: portfolio.slug,
+      data: portfolio as unknown as object,
+      version: portfolio.version,
+    },
+  });
+  await db.portfolioVersion.create({
+    data: {
+      portfolioId: portfolio.id,
+      version: portfolio.version,
+      data: portfolio as unknown as object,
+      note: "AI generated",
+    },
+  });
+  return portfolio;
+}
