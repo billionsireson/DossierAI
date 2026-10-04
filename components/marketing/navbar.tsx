@@ -28,7 +28,7 @@ export function Navbar() {
         </Link>
         <Link
           href="/app/dashboard"
-          className="rounded-full bg-[#B7F000] px-4 py-2 text-sm font-semibold text-[#07142F] shadow-[0_0_24px_rgba(183,240,0,0.3)]"
+          className="rounded-full bg-[#2E7CF6] px-4 py-2 text-sm font-semibold text-white shadow-[0_0_24px_rgba(46,124,246,0.45)]"
         >
           Build Your Portfolio
         </Link>

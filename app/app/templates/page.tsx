@@ -7,6 +7,7 @@ const TEMPLATES = [
   { id: "creative-minimal", name: "Creative Minimal", desc: "Gallery-first storytelling for designers and photographers." },
   { id: "corporate-executive", name: "Corporate Executive", desc: "Restrained, authority-led hierarchy for senior leaders." },
   { id: "tech-developer", name: "Tech / Developer", desc: "Project- and code-aware cards for engineers and builders." },
+  { id: "digital-creator", name: "Digital Creator", desc: "Vibrant, media-first layout for content creators." },
 ];
 
 export default function TemplatesPage() {

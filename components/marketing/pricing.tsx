@@ -50,41 +50,38 @@ const PLANS = [
 
 export function Pricing({ compact = false }: { compact?: boolean }) {
   return (
-    <section aria-labelledby="pricing-heading" className="relative overflow-hidden bg-[#040b1e] py-20">
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="animate-glow-pulse absolute left-1/2 top-10 h-72 w-[46rem] -translate-x-1/2 rounded-full bg-[#7c3aed]/15 blur-[130px]" />
-      </div>
-      <div className="relative mx-auto w-full max-w-6xl px-6">
-        <h2 id="pricing-heading" className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+    <section aria-labelledby="pricing-heading" className="bg-[#F4F6FB] py-20">
+      <div className="mx-auto w-full max-w-6xl px-6">
+        <h2 id="pricing-heading" className="text-3xl font-bold tracking-tight text-[#0F172A] md:text-4xl">
           Pricing
         </h2>
-        <p className="mt-2 text-[#93a4c4]">Choose the plan that fits your goals.</p>
+        <p className="mt-2 text-[#64748B]">Choose the plan that fits your goals.</p>
         <ul className="mt-10 grid items-stretch gap-5 md:grid-cols-3">
           {PLANS.map((p) => (
             <li key={p.name} className={p.highlight ? "md:-my-3" : ""}>
               <Spot
-                className={`flex h-full flex-col rounded-3xl p-[1.5px] transition-transform duration-300 hover:-translate-y-1.5 ${
+                className={`flex h-full flex-col rounded-3xl transition-transform duration-300 hover:-translate-y-1.5 ${
                   p.highlight
-                    ? "bg-gradient-to-b from-[#38bdf8] via-[#7c3aed] to-[#38bdf8] shadow-[0_0_60px_rgba(124,58,237,0.45)]"
-                    : "border border-white/10 bg-white/10"
+                    ? "bg-gradient-to-b from-[#2E7CF6] via-[#2E7CF6] to-[#180F6E] p-[1.5px] shadow-[0_16px_50px_rgba(46,124,246,0.4)]"
+                    : "border border-[#E2E8F0] bg-white p-0 shadow-[0_2px_16px_rgba(24,15,110,0.06)]"
                 }`}
               >
-                <div className={`relative flex h-full flex-col rounded-3xl p-7 ${p.highlight ? "bg-[#0a1730]" : "bg-[#0a1730]/60 backdrop-blur"}`}>
+                <div className={`relative flex h-full flex-col rounded-3xl p-7 ${p.highlight ? "bg-white" : ""}`}>
                   {"badge" in p && p.badge && (
-                    <span className="absolute -top-3.5 right-6 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7c3aed] px-3 py-1 text-xs font-semibold text-white shadow-[0_0_20px_rgba(124,58,237,0.6)]">
+                    <span className="absolute -top-3.5 right-6 rounded-full bg-[#2E7CF6] px-3 py-1 text-xs font-semibold text-white shadow-[0_0_20px_rgba(46,124,246,0.6)]">
                       {p.badge}
                     </span>
                   )}
-                  <h3 className="text-lg font-bold text-white">{p.name}</h3>
-                  <p className="text-sm text-[#93a4c4]">{p.desc}</p>
-                  <p className="mt-4 text-4xl font-bold tracking-tight text-white">
+                  <h3 className="text-lg font-bold text-[#0F172A]">{p.name}</h3>
+                  <p className="text-sm text-[#64748B]">{p.desc}</p>
+                  <p className="mt-4 text-4xl font-bold tracking-tight text-[#0F172A]">
                     {p.price}
-                    {p.per && <span className="text-sm font-normal text-[#93a4c4]">{p.per}</span>}
+                    {p.per && <span className="text-sm font-normal text-[#64748B]">{p.per}</span>}
                   </p>
-                  <ul className="mt-6 flex-1 space-y-2.5 text-sm text-[#cbd5e1]">
+                  <ul className="mt-6 flex-1 space-y-2.5 text-sm text-[#334155]">
                     {p.points.map((pt) => (
                       <li key={pt} className="flex gap-2.5">
-                        <Icons.check className="mt-0.5 h-4 w-4 shrink-0 text-[#B7F000]" />
+                        <Icons.check className="mt-0.5 h-4 w-4 shrink-0 text-[#2E7CF6]" />
                         <span>{pt}</span>
                       </li>
                     ))}
@@ -93,8 +90,8 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
                     href="/app/dashboard"
                     className={`mt-8 block rounded-full px-4 py-3 text-center text-sm font-semibold transition-all ${
                       p.highlight
-                        ? "bg-[#B7F000] text-[#07142F] shadow-[0_0_30px_rgba(183,240,0,0.4)] hover:shadow-[0_0_46px_rgba(183,240,0,0.6)]"
-                        : "border border-white/20 text-white hover:border-[#38bdf8]/60 hover:shadow-[0_0_30px_rgba(56,189,248,0.3)]"
+                        ? "bg-[#180F6E] text-white shadow-[0_8px_28px_rgba(24,15,110,0.45)] hover:shadow-[0_8px_40px_rgba(24,15,110,0.6)]"
+                        : "border border-[#E2E8F0] text-[#0F172A] hover:border-[#2E7CF6]/60 hover:shadow-[0_8px_28px_rgba(46,124,246,0.25)]"
                     }`}
                   >
                     {p.cta}
@@ -105,7 +102,7 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
           ))}
         </ul>
         {!compact && (
-          <p className="mt-6 text-center text-sm text-[#7d8aa5]">
+          <p className="mt-6 text-center text-sm text-[#94a3b8]">
             Plans and credit allocations are configurable — see PRD §25–§27.
           </p>
         )}

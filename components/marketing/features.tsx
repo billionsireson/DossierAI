@@ -4,37 +4,37 @@ import { Icons } from "@/components/marketing/icons";
 const FEATURES = [
   {
     icon: Icons.spark,
-    tint: "from-[#2563EB]/25 to-[#7c3aed]/25 text-[#93c5fd]",
+    chip: "bg-[#e8f1fd] text-[#2563EB]",
     title: "AI-Powered Creation",
     desc: "Turns your CV, resume or project files into a complete, professional portfolio.",
   },
   {
     icon: Icons.layout,
-    tint: "from-[#0ea5e9]/25 to-[#2563EB]/25 text-[#7dd3fc]",
+    chip: "bg-[#e8f7f0] text-[#0f766e]",
     title: "Premium Designs",
     desc: "Modern, clean and globally accepted templates that make you stand out.",
   },
   {
     icon: Icons.layers,
-    tint: "from-[#84cc16]/20 to-[#14b8a6]/20 text-[#B7F000]",
+    chip: "bg-[#f1f5f9] text-[#475569]",
     title: "Fully Editable",
     desc: "Customize your content, layout, colors and sections to match your style.",
   },
   {
     icon: Icons.brief,
-    tint: "from-[#f59e0b]/20 to-[#ef4444]/20 text-[#fcd34d]",
+    chip: "bg-[#fef3e8] text-[#c2410c]",
     title: "Multiple Input Options",
     desc: "Upload CV, resume, project documents or take a photo.",
   },
   {
     icon: Icons.globe,
-    tint: "from-[#38bdf8]/20 to-[#6366f1]/25 text-[#93c5fd]",
+    chip: "bg-[#eef2ff] text-[#4f46e5]",
     title: "Lifetime Publishing",
     desc: "Keep your portfolio live and accessible forever (with Pro/Premium).",
   },
   {
     icon: Icons.users,
-    tint: "from-[#ec4899]/20 to-[#7c3aed]/25 text-[#f0a6d3]",
+    chip: "bg-[#fdf2f8] text-[#be185d]",
     title: "Built for Everyone",
     desc: "Students, professionals, creatives, freelancers, job seekers and teams.",
   },
@@ -42,23 +42,23 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section id="features" aria-labelledby="features-heading" className="relative bg-[#040b1e] py-20">
+    <section id="features" aria-labelledby="features-heading" className="bg-[#F4F6FB] py-20">
       <div className="mx-auto w-full max-w-6xl px-6">
-        <h2 id="features-heading" className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+        <h2 id="features-heading" className="text-3xl font-bold tracking-tight text-[#0F172A] md:text-4xl">
           Why DossierAI?
         </h2>
-        <p className="mt-2 text-[#93a4c4]">
+        <p className="mt-2 text-[#64748B]">
           More than a CV. It&apos;s your personal brand, on autopilot.
         </p>
         <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => (
             <li key={f.title}>
-              <Spot className="h-full rounded-2xl border border-white/10 bg-white/[0.05] p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1.5 hover:border-[#38bdf8]/40 hover:shadow-[0_16px_50px_rgba(37,99,235,0.35)]">
-                <span className={`inline-flex rounded-xl bg-gradient-to-br p-2.5 ${f.tint}`}>
+              <Spot className="h-full rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-[0_2px_16px_rgba(24,15,110,0.06)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#2E7CF6]/40 hover:shadow-[0_16px_44px_rgba(46,124,246,0.22)]">
+                <span className={`inline-flex rounded-xl p-2.5 ${f.chip}`}>
                   <f.icon className="h-5 w-5" />
                 </span>
-                <h3 className="mt-4 font-semibold text-white">{f.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-[#93a4c4]">{f.desc}</p>
+                <h3 className="mt-4 font-semibold text-[#0F172A]">{f.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#64748B]">{f.desc}</p>
               </Spot>
             </li>
           ))}

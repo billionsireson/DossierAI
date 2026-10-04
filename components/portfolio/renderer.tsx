@@ -3,12 +3,14 @@ import { ModernProfessional } from "@/templates/modern-professional";
 import { CreativeMinimal } from "@/templates/creative-minimal";
 import { CorporateExecutive } from "@/templates/corporate-executive";
 import { TechDeveloper } from "@/templates/tech-developer";
+import { DigitalCreator } from "@/templates/digital-creator";
 
 export const TEMPLATE_IDS = [
   "modern-professional",
   "creative-minimal",
   "corporate-executive",
   "tech-developer",
+  "digital-creator",
 ] as const;
 
 export type TemplateId = (typeof TEMPLATE_IDS)[number];
@@ -36,6 +38,8 @@ export function PortfolioRenderer({
       return <CorporateExecutive portfolio={portfolio} />;
     case "tech-developer":
       return <TechDeveloper portfolio={portfolio} />;
+    case "digital-creator":
+      return <DigitalCreator portfolio={portfolio} />;
     case "modern-professional":
     default:
       return <ModernProfessional portfolio={portfolio} />;

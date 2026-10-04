@@ -8,7 +8,7 @@ import { Footer } from "@/components/marketing/footer";
 
 export default function HomePage() {
   return (
-    <div className="bg-[#040b1e]">
+    <div className="bg-[#F4F6FB]">
       <main>
         <Hero />
         <Features />

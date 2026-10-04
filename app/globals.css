@@ -1,15 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #07142f;
-  --color-abyss: #040b1e;
+  --color-royal-deep: #180f6e;
+  --color-navy: #0d1442;
+  --color-abyss: #070b28;
   --color-royal: #2563eb;
+  --color-cta: #2e7cf6;
+  --color-sky: #b7cce3;
+  --color-mist: #e0e4de;
+  --color-steel: #8da1b9;
+  --color-pebble: #8c8d88;
   --color-lime-accent: #b7f000;
-  --color-surface: #f7fafc;
+  --color-surface: #f4f6fb;
   --color-ink: #0f172a;
   --color-muted: #64748b;
   --color-border: #e2e8f0;
-  --font-sans: "Inter", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
@@ -100,6 +106,22 @@ body {
 .spotlight > * {
   position: relative;
   z-index: 1;
+}
+
+/* Diagonal gloss streaks for dark hero/footer (moodboard light beams) */
+.bg-streaks {
+  background-image:
+    linear-gradient(115deg, transparent 42%, rgba(147, 197, 253, 0.14) 47%, rgba(255, 255, 255, 0.22) 50%, rgba(147, 197, 253, 0.14) 53%, transparent 58%),
+    linear-gradient(115deg, transparent 62%, rgba(125, 211, 252, 0.1) 68%, rgba(255, 255, 255, 0.14) 71%, transparent 76%);
+}
+
+/* Soft top gloss wash */
+.bg-gloss-top {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.09),
+    transparent 32%
+  );
 }
 
 /* Blueprint grid overlay for dark sections */

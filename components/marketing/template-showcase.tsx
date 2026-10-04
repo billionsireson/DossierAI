@@ -4,10 +4,10 @@ import { Spot } from "@/components/motion/spot";
 function ThumbShell({ children, label }: { children: React.ReactNode; label: string }) {
   return (
     <div>
-      <div className="h-44 overflow-hidden rounded-xl border border-white/10">
+      <div className="h-44 overflow-hidden rounded-xl border border-[#E2E8F0]">
         {children}
       </div>
-      <p className="mt-2.5 text-sm font-semibold text-white">{label}</p>
+      <p className="mt-2.5 text-sm font-semibold text-[#0F172A]">{label}</p>
     </div>
   );
 }
@@ -94,35 +94,60 @@ function TechDeveloperThumb() {
   );
 }
 
+function DigitalCreatorThumb() {
+  return (
+    <ThumbShell label="Digital Creator">
+      <div className="flex h-full flex-col bg-[#0d1442] p-3">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#f472b6] to-[#7c3aed] text-[10px] font-bold text-white">
+            ▶
+          </div>
+          <div className="flex-1">
+            <div className="h-1.5 w-3/4 rounded bg-white" />
+            <div className="mt-1 h-1 w-1/2 rounded bg-[#f472b6]" />
+          </div>
+        </div>
+        <div className="mt-2 h-16 rounded-lg bg-gradient-to-br from-[#7c3aed] via-[#ec4899] to-[#f59e0b]" />
+        <div className="mt-2 grid grid-cols-3 gap-1.5">
+          <div className="h-8 rounded bg-white/15" />
+          <div className="h-8 rounded bg-white/15" />
+          <div className="h-8 rounded bg-white/15" />
+        </div>
+      </div>
+    </ThumbShell>
+  );
+}
+
 export function TemplateShowcase({ compact = false }: { compact?: boolean }) {
   return (
-    <section aria-labelledby="templates-heading" className="bg-[#040b1e] py-20">
+    <section aria-labelledby="templates-heading" className="bg-[#F4F6FB] py-20">
       <div className="mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 id="templates-heading" className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+            <h2 id="templates-heading" className="text-3xl font-bold tracking-tight text-[#0F172A] md:text-4xl">
               Portfolio Templates
             </h2>
-            <p className="mt-2 text-[#93a4c4]">
+            <p className="mt-2 text-[#64748B]">
               Choose from a range of professional, modern templates — all fully customizable.
             </p>
           </div>
           {!compact && (
-            <Link href="/examples" className="text-sm font-medium text-[#38bdf8] hover:text-white">
+            <Link href="/examples" className="text-sm font-medium text-[#2E7CF6] hover:text-[#180F6E]">
               See all examples →
             </Link>
           )}
         </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {[
             <ModernProfessionalThumb key="mp" />,
             <CreativeMinimalThumb key="cm" />,
             <CorporateExecutiveThumb key="ce" />,
             <TechDeveloperThumb key="td" />,
+            <DigitalCreatorThumb key="dc" />,
           ].map((t, i) => (
             <Spot
               key={i}
-              className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur transition-all duration-300 hover:-translate-y-1.5 hover:border-[#38bdf8]/40 hover:shadow-[0_16px_50px_rgba(37,99,235,0.35)]"
+              className="rounded-2xl border border-[#E2E8F0] bg-white p-3 shadow-[0_2px_16px_rgba(24,15,110,0.06)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#2E7CF6]/40 hover:shadow-[0_16px_44px_rgba(46,124,246,0.22)]"
             >
               {t}
             </Spot>

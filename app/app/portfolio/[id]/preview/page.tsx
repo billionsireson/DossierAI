@@ -11,6 +11,7 @@ const TEMPLATE_LABELS: Record<string, string> = {
   "creative-minimal": "Creative Minimal",
   "corporate-executive": "Corporate Executive",
   "tech-developer": "Tech / Developer",
+  "digital-creator": "Digital Creator",
 };
 
 export default async function PreviewPage({

@@ -84,13 +84,16 @@ function PhoneMock() {
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-heading" className="relative overflow-hidden bg-[#040b1e]">
-      {/* Ambient light */}
+    <section aria-labelledby="hero-heading" className="relative overflow-hidden bg-[#180F6E]">
+      {/* Ambient light + gloss streaks */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="bg-blueprint absolute inset-0" />
-        <div className="animate-drift absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-[#2563EB]/30 blur-[130px]" />
-        <div className="animate-drift absolute right-[-80px] top-1/3 h-80 w-80 rounded-full bg-[#7c3aed]/25 blur-[130px]" style={{ animationDelay: "-7s" }} />
-        <div className="animate-glow-pulse absolute bottom-[-120px] left-[10%] h-72 w-[36rem] rounded-full bg-[#0ea5e9]/15 blur-[130px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#180F6E] via-[#1e1b8f] to-[#0d1442]" />
+        <div className="bg-streaks absolute inset-0" />
+        <div className="bg-gloss-top absolute inset-0" />
+        <div className="bg-blueprint absolute inset-0 opacity-70" />
+        <div className="animate-drift absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-[#2E7CF6]/40 blur-[130px]" />
+        <div className="animate-drift absolute right-[-80px] top-1/3 h-80 w-80 rounded-full bg-[#7c3aed]/30 blur-[130px]" style={{ animationDelay: "-7s" }} />
+        <div className="animate-glow-pulse absolute bottom-[-120px] left-[10%] h-72 w-[36rem] rounded-full bg-[#93c5fd]/20 blur-[130px]" />
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-6 pb-16 pt-6 md:pb-24">
@@ -104,7 +107,7 @@ export function Hero() {
           </nav>
           <Link
             href="/app/dashboard"
-            className="rounded-full bg-[#B7F000] px-5 py-2 text-sm font-semibold text-[#07142F] shadow-[0_0_28px_rgba(183,240,0,0.35)] transition-all hover:shadow-[0_0_40px_rgba(183,240,0,0.55)]"
+            className="rounded-full bg-[#2E7CF6] px-5 py-2 text-sm font-semibold text-white shadow-[0_0_28px_rgba(46,124,246,0.5)] transition-all hover:shadow-[0_0_40px_rgba(46,124,246,0.7)]"
           >
             Build Your Portfolio
           </Link>
@@ -112,15 +115,15 @@ export function Hero() {
 
         <div className="mt-12 grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
           <div>
-            <p className="text-xs font-semibold tracking-[0.24em] text-[#93c5fd]">
-              YOUR STORY. PROFESSIONALLY PRESENTED.
+            <p className="text-xs font-semibold tracking-[0.24em] text-[#B7CCE3]">
+              YOUR SKILLS. YOUR STORY. POWERED BY AI.
             </p>
             <h1
               id="hero-heading"
               className="mt-5 text-5xl font-bold leading-[1.05] tracking-tight text-white md:text-6xl"
             >
               Turn Your CV, Resume or Projects into a Stunning Portfolio —{" "}
-              <span className="bg-gradient-to-r from-[#60a5fa] via-[#38bdf8] to-[#2563EB] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#7dd3fc] via-[#38bdf8] to-[#2E7CF6] bg-clip-text text-transparent">
                 Instantly.
               </span>
             </h1>
@@ -131,7 +134,7 @@ export function Hero() {
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
                 href="/app/dashboard"
-                className="group inline-flex items-center gap-2 rounded-full bg-[#B7F000] px-7 py-3.5 font-semibold text-[#07142F] shadow-[0_0_36px_rgba(183,240,0,0.4)] transition-all hover:shadow-[0_0_54px_rgba(183,240,0,0.6)]"
+                className="group inline-flex items-center gap-2 rounded-full bg-[#2E7CF6] px-7 py-3.5 font-semibold text-white shadow-[0_0_36px_rgba(46,124,246,0.55)] transition-all hover:shadow-[0_0_54px_rgba(46,124,246,0.75)]"
               >
                 Create Your Portfolio
                 <Icons.arrow className="h-4 w-4 transition-transform group-hover:translate-x-1" />
