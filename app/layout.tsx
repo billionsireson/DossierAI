@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   },
   description:
     "Upload your professional material and let DossierAI transform it into a polished, responsive portfolio website.",
+  manifest: "/manifest.webmanifest",
+  themeColor: "#180F6E",
+  appleWebApp: { capable: true, title: "DossierAI", statusBarStyle: "black-translucent" },
+  icons: {
+    icon: "/icon.png",
+    apple: "/icons/icon-180.png",
+  },
 };
 
 export default function RootLayout({
