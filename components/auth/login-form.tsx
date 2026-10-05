@@ -31,6 +31,11 @@ export function LoginForm() {
       >
         {pending ? "Signing in…" : "Sign in"}
       </button>
+      <p className="text-center text-sm">
+        <a href="/forgot" className="text-[#2563EB] hover:underline">
+          Forgot password?
+        </a>
+      </p>
     </form>
   );
 }

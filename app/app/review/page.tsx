@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ReviewForm } from "@/components/review/review-form";
+import { ReviewLoader } from "@/components/review/review-loader";
 import type { ExtractedProfile } from "@/types/extracted-profile";
 
 // Sample extraction so the review step is clickable before upload wiring lands.
@@ -26,7 +26,13 @@ const sample: ExtractedProfile = {
 
 export const metadata = { title: "Review" };
 
-export default function ReviewPage() {
+export default async function ReviewPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ storageKey?: string; fileName?: string; mimeType?: string }>;
+}) {
+  const sp = (await searchParams) ?? {};
+  const live = Boolean(sp.storageKey);
   return (
     <main className="py-2">
       <Link href="/app/upload" className="text-sm text-[#64748B] hover:text-[#0F172A]">
@@ -34,13 +40,19 @@ export default function ReviewPage() {
       </Link>
       <h1 className="mt-3 text-2xl font-bold">We found your professional story</h1>
       <p className="mt-1 text-sm text-[#64748B]">
-        Correct anything wrong before generation. Sample data — live extraction
-        via <code className="rounded bg-white px-1">POST /api/extraction</code>.
+        {live
+          ? `Extracted from ${sp.fileName ?? "your file"} — correct anything wrong before generation.`
+          : "Correct anything wrong before generation. Upload a file for live extraction."}
       </p>
       <div className="mt-5">
-        <ReviewForm
-          initial={sample}
-          warnings={["Sample data for development — upload a TXT file for live extraction."]}
+        <ReviewLoader
+          storageKey={sp.storageKey}
+          fileName={sp.fileName}
+          mimeType={sp.mimeType}
+          fallback={{
+            profile: sample,
+            warnings: live ? [] : ["Sample data for development — upload a TXT file for live extraction."],
+          }}
         />
       </div>
     </main>

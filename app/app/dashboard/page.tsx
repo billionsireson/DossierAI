@@ -3,7 +3,7 @@ import { PortfolioCard } from "@/components/dashboard/portfolio-card";
 import { EmptyPortfolios } from "@/components/dashboard/empty-state";
 import { getCurrentUser, getCurrentUserId } from "@/lib/auth/current-user";
 import { demoUser } from "@/lib/demo";
-import { balance } from "@/lib/credits/ledger";
+import { balance, history } from "@/lib/credits/ledger";
 import { listPortfolios } from "@/lib/portfolio/store";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +15,13 @@ export default async function DashboardPage() {
   const portfolios = await listPortfolios(userId);
   const credits = await balance(userId);
   const name = user?.name ?? demoUser.name;
+  const published = portfolios.filter((p) => p.publishing.status === "published").length;
+  const recentTx = await history(userId, 4);
+  const stats = [
+    { label: "Portfolios", value: String(portfolios.length) },
+    { label: "Published", value: String(published) },
+    { label: "Credits", value: String(credits) },
+  ];
 
   return (
     <main className="py-2">
@@ -42,6 +49,15 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      <section aria-label="Stats" className="mt-6 grid grid-cols-3 gap-3">
+        {stats.map((s) => (
+          <div key={s.label} className="rounded-2xl border border-[#E2E8F0] bg-white p-4">
+            <p className="text-2xl font-bold">{s.value}</p>
+            <p className="text-xs text-[#64748B]">{s.label}</p>
+          </div>
+        ))}
+      </section>
+
       <section aria-label="Portfolios" className="mt-6">
         {portfolios.length === 0 ? (
           <EmptyPortfolios />
@@ -56,12 +72,24 @@ export default async function DashboardPage() {
         )}
       </section>
 
-      <section aria-label="Generation history" className="mt-6 rounded-2xl border border-[#E2E8F0] bg-white p-5">
-        <h2 className="font-semibold text-[#0F172A]">Generation history</h2>
-        <p className="mt-1 text-sm text-[#64748B]">
-          AI jobs, credit usage and version notes will appear here once upload +
-          extraction land (Milestones 3–5).
-        </p>
+      <section aria-label="Recent activity" className="mt-6 rounded-2xl border border-[#E2E8F0] bg-white p-5">
+        <h2 className="font-semibold text-[#0F172A]">Recent activity</h2>
+        {recentTx.length === 0 ? (
+          <p className="mt-1 text-sm text-[#64748B]">
+            No credit activity yet — generate a portfolio to start the ledger.
+          </p>
+        ) : (
+          <ul className="mt-3 space-y-1.5 text-sm">
+            {recentTx.map((t) => (
+              <li key={t.id} className="flex items-center justify-between rounded-lg bg-[#F7FAFC] px-3 py-1.5">
+                <span className="font-medium">{t.type}</span>
+                <span className={t.amount < 0 ? "text-[#b91c1c]" : "text-[#166534]"}>
+                  {t.amount > 0 ? `+${t.amount}` : t.amount}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </main>
   );

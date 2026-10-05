@@ -55,6 +55,7 @@ model User {
   portfolios         Portfolio[]
   aiJobs             AIJob[]
   usageEvents        UsageEvent[]
+  passwordResets     PasswordReset[]
 }
 
 model Subscription {
@@ -90,6 +91,9 @@ model SourceDocument {
   mimeType  String
   sizeBytes Int
   storageKey String
+  // Inline bytes for serverless-safe storage (Neon). Local driver still
+  // mirrors to .uploads/ for inspection; DB bytes are the source of truth.
+  data      Bytes?
   createdAt DateTime @default(now())
 
   @@index([userId])
@@ -206,4 +210,16 @@ model UsageEvent {
 
   @@index([userId])
   @@index([event])
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }

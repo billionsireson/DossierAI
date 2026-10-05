@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LogoLockup } from "@/components/logo";
+import { SignOutButton } from "@/components/auth/signout-button";
 import { getCurrentUser, getCurrentUserId } from "@/lib/auth/current-user";
 import { demoUser } from "@/lib/demo";
 import { balance } from "@/lib/credits/ledger";
@@ -39,9 +40,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               </Link>
             ))}
           </nav>
-          <div className="mt-auto rounded-xl bg-white/10 p-3 text-sm">
+          <div className="mt-auto space-y-1 rounded-xl bg-white/10 p-3 text-sm">
             <p className="font-semibold text-white">{name}</p>
             <p className="text-xs text-[#94a3b8]">{plan} · {credits} credits</p>
+            {user && <SignOutButton />}
           </div>
         </aside>
         <div className="min-w-0 flex-1">{children}</div>

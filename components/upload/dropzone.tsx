@@ -9,6 +9,7 @@ type FileRow = {
   name: string;
   size: number;
   status: string;
+  reviewHref?: string;
 };
 
 function formatMB(bytes: number): string {
@@ -37,11 +38,24 @@ export function Dropzone() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error ?? "Upload failed.");
       setRows(
-        (data.files ?? []).map((f: { fileName: string; ok: boolean; error?: string; sizeBytes?: number }) => ({
-          name: f.fileName,
-          size: f.sizeBytes ?? 0,
-          status: f.ok ? "Uploaded — queued for extraction" : (f.error ?? "Rejected"),
-        })),
+        (data.files ?? []).map(
+          (f: {
+            fileName: string;
+            ok: boolean;
+            error?: string;
+            sizeBytes?: number;
+            storageKey?: string;
+            mimeType?: string;
+          }) => ({
+            name: f.fileName,
+            size: f.sizeBytes ?? 0,
+            status: f.ok ? "Uploaded — queued for extraction" : (f.error ?? "Rejected"),
+            reviewHref:
+              f.ok && f.storageKey
+                ? `/app/review?storageKey=${encodeURIComponent(f.storageKey)}&fileName=${encodeURIComponent(f.fileName)}&mimeType=${encodeURIComponent(f.mimeType ?? "")}`
+                : undefined,
+          }),
+        ),
       );
       setState("done");
     } catch (e) {
@@ -106,11 +120,16 @@ export function Dropzone() {
           {rows.map((r) => (
             <li
               key={r.name}
-              className="flex items-center justify-between rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-sm"
+              className="flex items-center justify-between gap-3 rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-sm"
             >
               <span className="font-medium text-[#0F172A]">{r.name}</span>
-              <span className="text-[#64748B]">
+              <span className="flex items-center gap-3 text-[#64748B]">
                 {r.size > 0 ? `${formatMB(r.size)} · ` : ""}{r.status}
+                {r.reviewHref && (
+                  <a href={r.reviewHref} className="font-semibold text-[#2E7CF6] hover:underline">
+                    Review →
+                  </a>
+                )}
               </span>
             </li>
           ))}

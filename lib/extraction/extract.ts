@@ -1,5 +1,4 @@
-import { readFile } from "fs/promises";
-import path from "path";
+import { readDocumentBytes } from "@/lib/documents/store";
 import {
   ExtractedProfileSchema,
   type ExtractedProfile,
@@ -20,9 +19,9 @@ export async function parseStoredFile(args: {
 }): Promise<ParsedDocument> {
   const lower = args.fileName.toLowerCase();
   if (TEXT_MIMES.has(args.mimeType) || lower.endsWith(".txt")) {
-    const full = path.join(process.cwd(), ".uploads", path.basename(args.storageKey));
-    const text = await readFile(full, "utf8").catch(() => "");
-    return { kind: "text", text: text.slice(0, 200_000) };
+    const buf = await readDocumentBytes(args.storageKey);
+    const text = (buf?.toString("utf8") ?? "").slice(0, 200_000);
+    return { kind: "text", text };
   }
   if (IMAGE_MIMES.has(args.mimeType)) {
     const provider = getProvider();

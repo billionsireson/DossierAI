@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { getStorageDriver } from "@/lib/storage";
 import {
   validateFileMeta,
   validationMessage,
 } from "@/lib/documents/validation";
-import { getDb } from "@/lib/db";
+import { saveDocument } from "@/lib/documents/store";
 import { ensureDemoUser } from "@/lib/db/ensure";
 import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
 import { getCurrentUserId } from "@/lib/auth/current-user";
@@ -33,7 +32,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No files provided." }, { status: 400 });
   }
 
-  const driver = getStorageDriver();
+  const userId = await getCurrentUserId();
+  if (userId === "demo-user") {
+    try {
+      await ensureDemoUser();
+    } catch {
+      // File driver path needs no user row.
+    }
+  }
   const results = [];
 
   for (const file of files) {
@@ -53,39 +59,20 @@ export async function POST(req: Request) {
 
     const bytes = Buffer.from(await file.arrayBuffer());
     // Never execute uploads; store bytes + record metadata only.
-    const stored = await driver.put({
+    const stored = await saveDocument({
+      userId,
       fileName: file.name,
       mimeType: file.type,
       data: bytes,
     });
 
-    // Best-effort DB record. Works without DATABASE_URL (dev preview).
-    let documentId: string | null = null;
-    try {
-      const userId = await getCurrentUserId();
-      if (userId === "demo-user") await ensureDemoUser();
-      const db = await getDb();
-      const doc = await db.sourceDocument.create({
-        data: {
-          userId,
-          fileName: file.name,
-          mimeType: file.type,
-          sizeBytes: stored.sizeBytes,
-          storageKey: stored.storageKey,
-        },
-      });
-      documentId = doc.id;
-    } catch {
-      documentId = null;
-    }
-
     results.push({
       fileName: file.name,
       ok: true as const,
-      documentId,
+      documentId: stored.documentId,
       storageKey: stored.storageKey,
       sizeBytes: stored.sizeBytes,
-      // Extraction job stub — full pipeline lands in Milestone 4.
+      mimeType: file.type,
       extractionJobId: `job_${randomUUID()}`,
     });
     track("file_uploaded", { mimeType: file.type });
