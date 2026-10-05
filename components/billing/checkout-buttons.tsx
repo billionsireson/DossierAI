@@ -21,7 +21,7 @@ export function CheckoutButtons() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error ?? "Checkout failed.");
-      window.location.href = data.authorizationUrl;
+      window.location.assign(data.authorizationUrl as string);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Checkout failed.");
     } finally {
