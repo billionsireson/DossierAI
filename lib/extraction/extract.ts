@@ -1,4 +1,5 @@
 import { readDocumentBytes } from "@/lib/documents/store";
+import { extractDocxText, extractPdfText } from "@/lib/documents/parse-file";
 import {
   ExtractedProfileSchema,
   type ExtractedProfile,
@@ -22,6 +23,39 @@ export async function parseStoredFile(args: {
     const buf = await readDocumentBytes(args.storageKey);
     const text = (buf?.toString("utf8") ?? "").slice(0, 200_000);
     return { kind: "text", text };
+  }
+  if (args.mimeType === "application/pdf" || lower.endsWith(".pdf")) {
+    const buf = await readDocumentBytes(args.storageKey);
+    if (!buf) {
+      return { kind: "needs-provider", reason: `${args.fileName}: file bytes not found.` };
+    }
+    try {
+      return { kind: "text", text: await extractPdfText(buf) };
+    } catch (e) {
+      const detail = e instanceof Error ? `: ${e.message.slice(0, 160)}` : "";
+      return {
+        kind: "needs-provider",
+        reason: `${args.fileName}: couldn't parse this PDF${detail}. Upload a clearer file or a photo for OCR.`,
+      };
+    }
+  }
+  if (
+    args.mimeType ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+    lower.endsWith(".docx")
+  ) {
+    const buf = await readDocumentBytes(args.storageKey);
+    if (!buf) {
+      return { kind: "needs-provider", reason: `${args.fileName}: file bytes not found.` };
+    }
+    try {
+      return { kind: "text", text: await extractDocxText(buf) };
+    } catch {
+      return {
+        kind: "needs-provider",
+        reason: `${args.fileName}: couldn't read this Word file. Try re-saving as DOCX or PDF.`,
+      };
+    }
   }
   if (IMAGE_MIMES.has(args.mimeType)) {
     const provider = getProvider();
