@@ -1,5 +1,6 @@
 import type { ExtractedProfile } from "@/types/extracted-profile";
 import { openAIProvider } from "@/lib/ai/openai-provider";
+import { geminiProvider } from "@/lib/ai/gemini-provider";
 
 /**
  * AI provider abstraction — PRD §47.
@@ -106,8 +107,9 @@ export const heuristicProvider: AIProvider = {
 };
 
 export function getProvider(): AIProvider {
-  // Vendor-backed OpenAI path when a key is configured (integration #1),
-  // deterministic heuristic otherwise. Both validate against the same schema.
+  // Priority: Gemini (free tier) → OpenAI (paid key) → heuristic.
+  // All paths validate against the same schema.
+  if (process.env.GEMINI_API_KEY) return geminiProvider;
   if (process.env.AI_PROVIDER_API_KEY) return openAIProvider;
   return heuristicProvider;
 }
