@@ -29,10 +29,11 @@ export const metadata = { title: "Review" };
 export default async function ReviewPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ storageKey?: string; fileName?: string; mimeType?: string }>;
+  searchParams?: Promise<{ storageKey?: string; fileName?: string; mimeType?: string; project?: string }>;
 }) {
   const sp = (await searchParams) ?? {};
   const live = Boolean(sp.storageKey);
+  const project = sp.project?.slice(0, 120);
   return (
     <main className="py-2">
       <Link href="/app/upload" className="text-sm text-[#64748B] hover:text-[#0F172A]">
@@ -44,6 +45,11 @@ export default async function ReviewPage({
           ? `Extracted from ${sp.fileName ?? "your file"} — correct anything wrong before generation.`
           : "Correct anything wrong before generation. Upload a file for live extraction."}
       </p>
+      {project && (
+        <p className="mt-3 inline-block rounded-full bg-[#e8f1fd] px-3 py-1 text-sm font-medium text-[#1e3a8a]">
+          Project: {project}
+        </p>
+      )}
       <div className="mt-5">
         <ReviewLoader
           storageKey={sp.storageKey}

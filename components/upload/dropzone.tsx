@@ -16,53 +16,69 @@ function formatMB(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 }
 
-export function Dropzone() {
+export function Dropzone({
+  accept,
+  capture,
+  projectTitle,
+}: {
+  accept?: string;
+  capture?: string;
+  projectTitle?: string;
+}) {
   const [dragging, setDragging] = useState(false);
   const [state, setState] = useState<UploadState>("idle");
   const [rows, setRows] = useState<FileRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const upload = useCallback(async (fileList: FileList | File[]) => {
-    const files = Array.from(fileList);
-    if (files.length === 0) return;
-    setState("uploading");
-    setError(null);
-    setRows(files.map((f) => ({ name: f.name, size: f.size, status: "Uploading…" })));
+  const upload = useCallback(
+    async (fileList: FileList | File[]) => {
+      const files = Array.from(fileList);
+      if (files.length === 0) return;
+      setState("uploading");
+      setError(null);
+      setRows(files.map((f) => ({ name: f.name, size: f.size, status: "Uploading…" })));
 
-    const form = new FormData();
-    for (const f of files) form.append("files", f);
+      const form = new FormData();
+      for (const f of files) form.append("files", f);
 
-    try {
-      const res = await fetch("/api/uploads", { method: "POST", body: form });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error ?? "Upload failed.");
-      setRows(
-        (data.files ?? []).map(
-          (f: {
-            fileName: string;
-            ok: boolean;
-            error?: string;
-            sizeBytes?: number;
-            storageKey?: string;
-            mimeType?: string;
-          }) => ({
-            name: f.fileName,
-            size: f.sizeBytes ?? 0,
-            status: f.ok ? "Uploaded — queued for extraction" : (f.error ?? "Rejected"),
-            reviewHref:
-              f.ok && f.storageKey
-                ? `/app/review?storageKey=${encodeURIComponent(f.storageKey)}&fileName=${encodeURIComponent(f.fileName)}&mimeType=${encodeURIComponent(f.mimeType ?? "")}`
-                : undefined,
-          }),
-        ),
-      );
-      setState("done");
-    } catch (e) {
-      setState("error");
-      setError(e instanceof Error ? e.message : "Upload failed.");
-    }
-  }, []);
+      try {
+        const res = await fetch("/api/uploads", { method: "POST", body: form });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error ?? "Upload failed.");
+        setRows(
+          (data.files ?? []).map(
+            (f: {
+              fileName: string;
+              ok: boolean;
+              error?: string;
+              sizeBytes?: number;
+              storageKey?: string;
+              mimeType?: string;
+            }) => {
+              const params = new URLSearchParams({
+                storageKey: f.storageKey ?? "",
+                fileName: f.fileName,
+                mimeType: f.mimeType ?? "",
+              });
+              if (projectTitle) params.set("project", projectTitle);
+              return {
+                name: f.fileName,
+                size: f.sizeBytes ?? 0,
+                status: f.ok ? "Uploaded — queued for extraction" : (f.error ?? "Rejected"),
+                reviewHref: f.ok && f.storageKey ? `/app/review?${params.toString()}` : undefined,
+              };
+            },
+          ),
+        );
+        setState("done");
+      } catch (e) {
+        setState("error");
+        setError(e instanceof Error ? e.message : "Upload failed.");
+      }
+    },
+    [projectTitle],
+  );
 
   return (
     <div>
@@ -97,7 +113,8 @@ export function Dropzone() {
           ref={inputRef}
           type="file"
           multiple
-          accept={uploadConfig.acceptedExtensions.join(",")}
+          accept={accept ?? uploadConfig.acceptedExtensions.join(",")}
+          {...(capture ? { capture: capture as "user" | "environment" } : {})}
           className="hidden"
           onChange={(e) => {
             if (e.target.files) void upload(e.target.files);
