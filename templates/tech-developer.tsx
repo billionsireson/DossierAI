@@ -5,8 +5,10 @@ import {
   educationOf,
   experienceOf,
   heroOf,
+  initialsOf,
   projectsOf,
   skillsOf,
+  statsOf,
 } from "@/lib/portfolio/sections";
 
 /** Tech / Developer: terminal-inspired dark layout with stats. */
@@ -18,6 +20,7 @@ export function TechDeveloper({ portfolio }: { portfolio: Portfolio }) {
   const experience = experienceOf(portfolio);
   const projects = projectsOf(portfolio);
   const education = educationOf(portfolio);
+  const stats = statsOf(portfolio);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[#1e293b] bg-[#020617] font-mono text-[#e2e8f0]">
@@ -25,12 +28,24 @@ export function TechDeveloper({ portfolio }: { portfolio: Portfolio }) {
         <span className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[#f59e0b]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
-        <span className="ml-2 text-xs text-[#64748B]">~/portfolio</span>
+        <span className="ml-2 text-xs text-[#64748B]">~/{initialsOf(portfolio.profile.name).toLowerCase() || "portfolio"}</span>
       </div>
       <div className="px-6 py-8">
         <p className="text-sm text-[#22c55e]">$ whoami</p>
         <h1 className="mt-2 text-3xl font-bold text-white">{portfolio.profile.name}</h1>
         {hero?.headline && <p className="mt-1 text-[#38bdf8]">{hero.headline}</p>}
+        {stats.length > 0 && (
+          <p className="mt-2 text-sm text-[#f59e0b]">
+            [{stats.map((s) => `${s.value} ${s.label}`).join(" | ")}]
+          </p>
+        )}
+        {contact?.email && (
+          <p className="mt-3 text-sm">
+            <a href={`mailto:${contact.email}`} className="rounded bg-[#22c55e] px-3 py-1.5 font-bold text-[#020617] hover:bg-[#4ade80]">
+              ./hire-me
+            </a>
+          </p>
+        )}
         {about?.body && <p className="mt-4 max-w-2xl text-sm text-[#94a3b8]">{about.body}</p>}
         {skills?.skills && skills.skills.length > 0 && (
           <p className="mt-4 text-sm">

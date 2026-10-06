@@ -34,4 +34,32 @@ describe("portfolio generation", () => {
     expect(p.profile.name).toBe("Your Name");
     expect(p.sections.some((s) => s.type === "experience")).toBe(false);
   });
+
+  it("never repeats the name as headline and cuts at word boundaries", () => {
+    const p = buildPortfolio({
+      profile: {
+        name: { value: "Isaac Gregory Edo" },
+        summary: {
+          value:
+            "Growth Strategy | Business Development | Customer Success | Revenue Operations Helping organizations accelerate growth through strategic partnerships, exceptional customer experiences, and scalable revenue systems.",
+        },
+        links: [],
+        experience: [],
+        education: [],
+        skills: [],
+        projects: [],
+        certifications: [],
+        achievements: [],
+      },
+      userId: "u1",
+      templateId: "modern-professional",
+    });
+    const hero = p.sections.find((s) => s.type === "hero")?.content as {
+      headline?: string;
+      subheadline?: string;
+    };
+    expect(hero.headline ?? "").not.toContain("Isaac Gregory Edo");
+    expect(hero.subheadline ?? "").not.toMatch(/exception$/);
+    expect(p.profile.headline ?? "").not.toContain("Isaac Gregory Edo");
+  });
 });

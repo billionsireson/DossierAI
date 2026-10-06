@@ -3,8 +3,10 @@ import {
   aboutOf,
   contactOf,
   heroOf,
+  initialsOf,
   projectsOf,
   skillsOf,
+  statsOf,
 } from "@/lib/portfolio/sections";
 
 /** Digital Creator: vibrant, media-first layout for content creators. */
@@ -14,15 +16,28 @@ export function DigitalCreator({ portfolio }: { portfolio: Portfolio }) {
   const skills = skillsOf(portfolio);
   const projects = projectsOf(portfolio);
   const contact = contactOf(portfolio);
+  const stats = statsOf(portfolio);
 
   return (
     <div className="overflow-hidden rounded-2xl bg-[#0d1442] text-white">
+      <nav aria-label="Portfolio" className="flex items-center justify-between px-6 py-3 text-xs text-white/70">
+        <span className="font-black">{initialsOf(portfolio.profile.name)}.</span>
+        <span className="flex gap-4">
+          <span>Work</span>
+          <span>About</span>
+        </span>
+      </nav>
       <div className="bg-gradient-to-br from-[#7c3aed] via-[#ec4899] to-[#f59e0b] px-8 py-12">
         <p className="text-xs font-bold tracking-[0.24em] text-white/85">CREATOR</p>
         <h1 className="mt-2 text-4xl font-black tracking-tight drop-shadow">
           {portfolio.profile.name}
         </h1>
         {hero?.headline && <p className="mt-2 font-medium text-white/90">{hero.headline}</p>}
+        {stats.length > 0 && (
+          <p className="mt-3 text-sm font-semibold text-white">
+            {stats.map((s) => `${s.value} ${s.label}`).join("   ")}
+          </p>
+        )}
       </div>
       <div className="px-8 py-8">
         {about?.body && <p className="max-w-2xl text-[#cbd5e1]">{about.body}</p>}

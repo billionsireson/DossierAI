@@ -16,6 +16,20 @@ export function buildPortfolio(args: {
   const { profile, userId, templateId } = args;
   const name = profile.name?.value?.trim() || "Your Name";
   const slug = toSlug(`${name}-portfolio`);
+  // Headline must never repeat the name. Prefer the extracted title; else a
+  // word-boundary slice of the summary; else omit and let the name carry it.
+  const rawHeadline = profile.title?.value?.trim();
+  const headline =
+    rawHeadline && rawHeadline.toLowerCase() !== name.toLowerCase()
+      ? rawHeadline
+      : undefined;
+  const summary = profile.summary?.value;
+  const wordSlice = (s: string | undefined, max: number): string | undefined => {
+    if (!s) return undefined;
+    if (s.length <= max) return s;
+    const cut = s.slice(0, max);
+    return cut.slice(0, Math.max(cut.lastIndexOf(" "), 1)).trimEnd() + "…";
+  };
   const sections: PortfolioSection[] = [];
   let order = 0;
   const push = (s: PortfolioSection) => {
@@ -28,8 +42,8 @@ export function buildPortfolio(args: {
     order: 0,
     visible: true,
     content: {
-      headline: profile.title?.value ?? name,
-      subheadline: profile.summary?.value?.slice(0, 160),
+      headline,
+      subheadline: wordSlice(summary, 160),
     },
   } as PortfolioSection);
 
@@ -118,9 +132,9 @@ export function buildPortfolio(args: {
     slug,
     profile: {
       name,
-      headline: profile.title?.value ?? profile.summary?.value?.slice(0, 80),
+      headline,
       location: profile.location?.value,
-      summary: profile.summary?.value,
+      summary,
     },
     socialLinks: profile.links.slice(0, 8).map((url, i) => ({
       id: `link-${i}`,
@@ -131,7 +145,7 @@ export function buildPortfolio(args: {
     theme: { templateId, mode: "light" },
     seo: {
       title: `${name} — Portfolio`,
-      description: profile.summary?.value?.slice(0, 160),
+      description: wordSlice(summary, 160),
     },
     publishing: { status: "draft" },
     version: 1,

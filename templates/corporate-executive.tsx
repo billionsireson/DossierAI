@@ -7,6 +7,7 @@ import {
   heroOf,
   projectsOf,
   skillsOf,
+  statsOf,
 } from "@/lib/portfolio/sections";
 
 /** Corporate Executive: restrained, centered, authority-led on deep navy. */
@@ -18,9 +19,15 @@ export function CorporateExecutive({ portfolio }: { portfolio: Portfolio }) {
   const experience = experienceOf(portfolio);
   const projects = projectsOf(portfolio);
   const education = educationOf(portfolio);
+  const stats = statsOf(portfolio);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[#1e293b] bg-[#0b1226] text-white">
+      <nav aria-label="Portfolio" className="flex items-center justify-center gap-6 border-b border-white/10 px-6 py-3 text-xs text-[#94a3b8]">
+        {experience.length > 0 && <span>Experience</span>}
+        {projects.length > 0 && <span>Selected Work</span>}
+        <span>Contact</span>
+      </nav>
       <div className="px-8 py-12 text-center">
         <div
           aria-hidden
@@ -32,6 +39,16 @@ export function CorporateExecutive({ portfolio }: { portfolio: Portfolio }) {
         {hero?.headline && <p className="mt-2 text-[#c9a227]">{hero.headline}</p>}
         {hero?.subheadline && (
           <p className="mx-auto mt-3 max-w-xl text-sm text-[#94a3b8]">{hero.subheadline}</p>
+        )}
+        {stats.length > 0 && (
+          <p className="mt-5 text-sm text-[#cbd5e1]">
+            {stats.map((s) => `${s.value} ${s.label}`).join("  ·  ")}
+          </p>
+        )}
+        {contact?.email && (
+          <a href={`mailto:${contact.email}`} className="mt-6 inline-block rounded-full bg-[#c9a227] px-5 py-2.5 text-sm font-semibold text-[#0b1226] hover:bg-[#f5e08c]">
+            Request introduction
+          </a>
         )}
       </div>
       <div className="mx-auto max-w-2xl space-y-8 px-8 pb-10">
