@@ -1,7 +1,13 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { heuristicProvider } from "@/lib/ai/provider";
 import { ExtractedProfileSchema, needsReview } from "@/types/extracted-profile";
 import { extractFromText } from "@/lib/extraction/extract";
+
+beforeEach(() => {
+  // Deterministic heuristic path: vendor keys must not leak into unit tests.
+  vi.stubEnv("GEMINI_API_KEY", "");
+  vi.stubEnv("AI_PROVIDER_API_KEY", "");
+});
 
 const CV = `Esther Okafor
 Product Designer in Lagos
