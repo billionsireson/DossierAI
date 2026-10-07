@@ -75,6 +75,15 @@ export function needsReview(profile: ExtractedProfile): string[] {
     check(`experience[${i}].company`, x.company?.evidence);
     check(`experience[${i}].role`, x.role?.evidence);
   });
-  profile.skills.forEach((s, i) => check(`skills[${i}]`, s.evidence));
+  const lowSkills = profile.skills.filter(
+    (s) => typeof s.evidence?.confidence === "number" && s.evidence.confidence < REVIEW_THRESHOLD,
+  );
+  if (lowSkills.length > 0) {
+    if (lowSkills.length === profile.skills.length && profile.skills.length > 3) {
+      paths.push(`skills (${lowSkills.length} extracted — skim and confirm)`);
+    } else {
+      for (let i = 0; i < lowSkills.length; i += 1) paths.push(`skills[${i}]`);
+    }
+  }
   return paths;
 }

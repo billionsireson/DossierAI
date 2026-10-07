@@ -4,6 +4,7 @@ import { demoPortfolios } from "@/lib/demo";
 import { isDbConfigured } from "@/lib/env";
 import { getDb } from "@/lib/db";
 import { ensureDemoUser } from "@/lib/db/ensure";
+import { toSlug } from "@/types/portfolio";
 import type { Portfolio, PortfolioSection } from "@/types/portfolio";
 
 export type PortfolioVersionRecord = {
@@ -247,6 +248,20 @@ export async function listVersions(id: string): Promise<PortfolioVersionRecord[]
     data: r.data as unknown as Portfolio,
     createdAt: r.createdAt.toISOString(),
   }));
+}
+
+/** Unique portfolio slug, suffixing on collision (repeat generations). */
+export async function ensureUniquePortfolioSlug(base: string): Promise<string> {
+  let slug = toSlug(base);
+  if (!dbEnabled()) return slug;
+  const db = await getDb();
+  let n = 2;
+  while (await db.portfolio.findUnique({ where: { slug } })) {
+    slug = toSlug(`${base}-${n}`);
+    n += 1;
+    if (n > 100) throw new Error("Could not allocate a unique slug.");
+  }
+  return slug;
 }
 
 /** Persist a freshly generated portfolio as version 1. */
