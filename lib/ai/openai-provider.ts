@@ -53,7 +53,8 @@ export const openAIProvider: AIProvider = {
       const parsed = ExtractedProfileSchema.safeParse(JSON.parse(raw));
       if (!parsed.success) throw new Error("OpenAI output failed validation.");
       return parsed.data;
-    } catch {
+    } catch (e) {
+      console.warn("[ai] openai failed, heuristic fallback:", e instanceof Error ? e.message : e);
       return heuristicProvider.extractProfile({ text, fileName });
     }
   },

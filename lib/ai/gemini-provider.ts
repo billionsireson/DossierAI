@@ -46,7 +46,8 @@ export const geminiProvider: AIProvider = {
       const parsed = ExtractedProfileSchema.safeParse(JSON.parse(raw));
       if (!parsed.success) throw new Error("Gemini output failed validation.");
       return parsed.data;
-    } catch {
+    } catch (e) {
+      console.warn("[ai] gemini failed, heuristic fallback:", e instanceof Error ? e.message : e);
       return heuristicProvider.extractProfile({ text, fileName });
     }
   },

@@ -61,8 +61,15 @@ export function ReviewForm({ initial, warnings }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ profile, templateId }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error ?? "Generation failed.");
+      const text = await res.text();
+      let data: { portfolio?: { id: string }; error?: string };
+      try {
+        data = text ? (JSON.parse(text) as typeof data) : {};
+      } catch {
+        throw new Error(`Server returned ${res.status} with an unreadable response. Try again.`);
+      }
+      if (!res.ok) throw new Error(data?.error ?? `Request failed (${res.status}). Try again.`);
+      if (!data?.portfolio?.id) throw new Error("Generation returned no portfolio. Try again.");
       router.push(`/app/portfolio/${data.portfolio.id}/preview?template=${templateId}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Generation failed.");

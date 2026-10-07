@@ -34,4 +34,32 @@ describe("heuristic extraction", () => {
     expect(profile.name).toBeUndefined();
     expect(profile.email).toBeUndefined();
   });
+
+  it("parses sections, experience and education from a realistic CV", async () => {
+    const text = [
+      "ISAAC GREGORY EDO",
+      "Growth Strategy | Business Development | Customer Success",
+      "isaacgregoryhq@gmail.com | +2349017901914 | Lagos, Nigeria",
+      "PROFILE",
+      "Growth leader with 8+ years across partnerships and revenue operations.",
+      "EXPERIENCE",
+      "Head of Growth, Kora (2022 - Present)",
+      "Regional Manager, TradeDepot (2019 - 2022)",
+      "EDUCATION",
+      "B.Sc Economics, University of Lagos",
+      "SKILLS",
+      "Growth Strategy, Business Development, Customer Success",
+    ].join("\n");
+    const { profile } = await extractFromText({ text, fileName: "cv.txt" });
+    expect(profile.name?.value).toBe("ISAAC GREGORY EDO");
+    expect(profile.title?.value).toContain("Growth Strategy");
+    expect(profile.experience.length).toBe(2);
+    expect(profile.experience[0].startDate?.value).toBe("2022");
+    expect(profile.education.length).toBeGreaterThan(0);
+    expect(profile.skills.map((s) => s.value)).toEqual([
+      "Growth Strategy",
+      "Business Development",
+      "Customer Success",
+    ]);
+  });
 });
