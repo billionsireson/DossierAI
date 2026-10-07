@@ -27,6 +27,7 @@ export const siteConfig = {
     "corporate-executive",
     "tech-developer",
     "digital-creator",
+    "spotlight",
   ] as const,
 } as const;
 

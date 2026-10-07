@@ -72,7 +72,28 @@ function saveFile(shape: StoreShape): void {
 async function ensureSeeded(): Promise<void> {
   const db = await getDb();
   const count = await db.portfolio.count();
-  if (count > 0) return;
+  if (count > 0) {
+    // One-time upgrade: thin seeds predate the full story data.
+    const thin = await db.portfolio.findUnique({ where: { id: "demo-fintech" } });
+    const data = thin?.data as unknown as Portfolio | undefined;
+    const hasProjects = data?.sections?.some((s) => s.type === "projects");
+    if (thin && !hasProjects) {
+      const rich = demoPortfolios.find((p) => p.id === "demo-fintech")!;
+      await db.portfolio.update({
+        where: { id: rich.id },
+        data: { data: rich as unknown as object, version: rich.version, slug: rich.slug },
+      });
+      await db.portfolioVersion.create({
+        data: {
+          portfolioId: rich.id,
+          version: rich.version,
+          data: rich as unknown as object,
+          note: "Seeded full story sample",
+        },
+      });
+    }
+    return;
+  }
   await ensureDemoUser();
   for (const p of demoPortfolios) {
     await db.portfolio.create({

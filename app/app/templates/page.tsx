@@ -8,6 +8,7 @@ const TEMPLATES = [
   { id: "corporate-executive", name: "Corporate Executive", desc: "Restrained, authority-led hierarchy for senior leaders." },
   { id: "tech-developer", name: "Tech / Developer", desc: "Project- and code-aware cards for engineers and builders." },
   { id: "digital-creator", name: "Digital Creator", desc: "Vibrant, media-first layout for content creators." },
+  { id: "spotlight", name: "Spotlight", desc: "Editorial story layout — nav, stats, expertise, case studies, timeline." },
 ];
 
 export default function TemplatesPage() {

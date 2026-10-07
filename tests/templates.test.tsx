@@ -4,13 +4,14 @@ import { PortfolioRenderer, isTemplateId } from "@/components/portfolio/renderer
 import { demoPortfolios } from "@/lib/demo";
 
 describe("template renderer", () => {
-  it("renders all five families without crashing", () => {
+  it("renders all six families without crashing", () => {
     for (const t of [
       "modern-professional",
       "creative-minimal",
       "corporate-executive",
       "tech-developer",
       "digital-creator",
+      "spotlight",
     ]) {
       const html = renderToString(
         <PortfolioRenderer portfolio={demoPortfolios[0]} template={t} />,

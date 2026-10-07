@@ -47,7 +47,7 @@ export const PLANS: Record<PlanId, PlanConfig> = {
     name: "Premium",
     priceNGN: 9998,
     creditsPerMonth: 200,
-    templates: ["modern-professional", "creative-minimal", "corporate-executive", "tech-developer", "digital-creator"],
+    templates: ["modern-professional", "creative-minimal", "corporate-executive", "tech-developer", "digital-creator", "spotlight"],
     maxPortfolios: 50,
     publishing: { durationDays: null, label: "Lifetime publishing" },
     features: [

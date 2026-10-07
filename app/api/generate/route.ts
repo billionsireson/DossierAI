@@ -22,6 +22,7 @@ const ALLOWED_TEMPLATES = new Set([
   "corporate-executive",
   "tech-developer",
   "digital-creator",
+  "spotlight",
 ]);
 
 export async function POST(req: Request) {
