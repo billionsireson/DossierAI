@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { PortfolioRenderer, TEMPLATE_IDS, isTemplateId } from "@/components/portfolio/renderer";
+import { PortfolioRenderer, TEMPLATE_IDS } from "@/components/portfolio/renderer";
+import { getTemplate } from "@/lib/templates/store";
 import { PublishButton } from "@/components/publish/publish-button";
 import { getPortfolio } from "@/lib/portfolio/store";
 import { demoPortfolios } from "@/lib/demo";
@@ -24,9 +25,11 @@ export default async function PreviewPage({
 }) {
   const { id } = await params;
   const sp = (await searchParams) ?? {};
-  const template = sp.template && isTemplateId(sp.template) ? sp.template : undefined;
+  const requested = typeof sp.template === "string" && /^[a-z0-9-]{1,60}$/.test(sp.template) ? sp.template : undefined;
   const portfolio = await getPortfolio(id) ?? demoPortfolios[0];
-  const active = template ?? portfolio.theme.templateId;
+  const active = requested ?? portfolio.theme.templateId;
+  const row = await getTemplate(active).catch(() => null);
+  const studioTheme = row?.active ? row.theme : null;
 
   return (
     <main className="py-2">
@@ -70,7 +73,7 @@ export default async function PreviewPage({
         ))}
       </nav>
       <div className="mt-5">
-        <PortfolioRenderer portfolio={portfolio} template={active} />
+        <PortfolioRenderer portfolio={portfolio} template={active} studioTheme={studioTheme} />
       </div>
     </main>
   );

@@ -5,6 +5,8 @@ import { CorporateExecutive } from "@/templates/corporate-executive";
 import { TechDeveloper } from "@/templates/tech-developer";
 import { DigitalCreator } from "@/templates/digital-creator";
 import { Spotlight } from "@/templates/spotlight";
+import { Studio } from "@/templates/studio";
+import type { StudioTheme } from "@/lib/templates/studio";
 
 export const TEMPLATE_IDS = [
   "modern-professional",
@@ -23,15 +25,19 @@ export function isTemplateId(value: string): value is TemplateId {
 
 /**
  * Data-driven renderer (PRD §15, §20): same portfolio JSON, any template.
- * Unknown template ids fall back to Modern Professional — never a blank page.
+ * A DB studio theme overrides the code renderer when present; unknown ids
+ * fall back to Modern Professional — never a blank page.
  */
 export function PortfolioRenderer({
   portfolio,
   template,
+  studioTheme,
 }: {
   portfolio: Portfolio;
   template?: string;
+  studioTheme?: StudioTheme | null;
 }) {
+  if (studioTheme) return <Studio portfolio={portfolio} theme={studioTheme} />;
   const id = template ?? portfolio.theme.templateId;
   switch (id) {
     case "creative-minimal":

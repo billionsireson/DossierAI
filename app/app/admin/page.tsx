@@ -4,6 +4,7 @@ import { listPortfolios } from "@/lib/portfolio/store";
 import { balance, history } from "@/lib/credits/ledger";
 import { demoUser } from "@/lib/demo";
 import { CreditGrantForm } from "@/components/admin/credit-grant-form";
+import { TemplateDesigner } from "@/components/admin/template-designer";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin" };
@@ -44,6 +45,16 @@ export default async function AdminPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="mt-4 rounded-2xl border border-[#E2E8F0] bg-white p-5">
+        <h2 className="font-semibold">Templates — design once, gate by plan</h2>
+        <p className="mt-1 text-sm text-[#64748B]">
+          Colors, hero, font and corners only — never raw code. Empty plans means every user.
+        </p>
+        <div className="mt-3">
+          <TemplateDesigner />
+        </div>
       </section>
 
       <section className="mt-4 rounded-2xl border border-[#E2E8F0] bg-white p-5">
