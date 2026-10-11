@@ -21,9 +21,8 @@ export default function PricingPage() {
         </Link>
         <h1 className="mt-4 text-4xl font-bold tracking-tight">Pricing</h1>
         <p className="mt-2 max-w-2xl text-[#64748B]">
-          Subscriptions grant monthly credit allocations into an immutable
-          ledger wallet. Basic UI actions (recolor, reorder, manual edits) never
-          consume credits.
+          Free for everyone. Credits refill automatically — 15 every 12 hours.
+          Basic UI actions (recolor, reorder, manual edits) never consume credits.
         </p>
       </main>
       <Pricing />
