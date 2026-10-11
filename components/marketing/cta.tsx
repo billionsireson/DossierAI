@@ -3,26 +3,27 @@ import { Icons } from "@/components/marketing/icons";
 
 export function CTA() {
   return (
-    <section aria-labelledby="cta-heading" className="bg-[#F4F6FB] px-6 pb-20 pt-4">
-      <div className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-3xl bg-[#180F6E] px-6 py-16 text-center text-white md:px-16">
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#180F6E] via-[#2a1fa0] to-[#0d1442]" />
-          <div className="bg-streaks absolute inset-0" />
-          <div className="animate-glow-pulse absolute -top-20 left-1/3 h-56 w-[30rem] rounded-full bg-[#2E7CF6]/40 blur-[110px]" />
-          <div className="bg-blueprint absolute inset-0 opacity-60" />
+    <section
+      aria-labelledby="cta-heading"
+      className="relative overflow-hidden border-y border-[rgba(73,147,255,0.28)] px-6 py-16 md:py-24"
+      style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(0,100,255,0.22), transparent 65%), linear-gradient(120deg, #04152e, #061a3d 55%, #031027)" }}
+    >
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+        <div className="max-w-xl">
+          <h2 id="cta-heading" className="text-3xl font-semibold tracking-tight text-[#f4f8ff] md:text-[2.5rem] md:leading-[1.15]">
+            Your work deserves a world-class stage.
+          </h2>
+          <p className="mt-3 text-[#b6c8e2]">
+            Professional work deserves professional presentation. Start from the
+            CV you already have.
+          </p>
         </div>
-        <h2 id="cta-heading" className="relative mx-auto max-w-2xl text-3xl font-bold tracking-tight md:text-4xl">
-          Your work deserves a world-class stage.
-        </h2>
-        <p className="relative mx-auto mt-3 max-w-xl text-[#cbd5e1]">
-          Professional work deserves professional presentation. Start from the
-          CV you already have.
-        </p>
         <Link
           href="/app/dashboard"
-          className="relative mt-8 inline-flex items-center gap-2 rounded-full bg-[#2E7CF6] px-8 py-3.5 font-semibold text-white shadow-[0_0_40px_rgba(46,124,246,0.55)] transition-shadow hover:shadow-[0_0_60px_rgba(46,124,246,0.75)]"
+          className="inline-flex min-h-[46px] shrink-0 items-center gap-3 rounded-full bg-gradient-to-r from-[#0875ff] via-[#0755f5] to-[#4338ff] px-[22px] py-3 text-sm font-semibold text-white shadow-[0_6px_24px_rgba(0,93,255,0.24)] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_48px_rgba(0,112,255,0.32)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00c8ff]"
         >
-          Build My Portfolio <Icons.arrow className="h-4 w-4" />
+          Start Your Journey Here
+          <Icons.arrow className="h-4 w-4" />
         </Link>
       </div>
     </section>

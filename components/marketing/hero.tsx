@@ -2,81 +2,55 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { Icons } from "@/components/marketing/icons";
 
-const FILE_BADGES = [
-  { label: "PDF", bg: "bg-[#ef4444] shadow-[0_0_24px_rgba(239,68,68,0.55)]" },
-  { label: "DOCX", bg: "bg-[#2563EB] shadow-[0_0_24px_rgba(37,99,235,0.6)]" },
-  { label: "IMG", bg: "bg-[#7c3aed] shadow-[0_0_24px_rgba(124,58,237,0.6)]" },
-];
-
-function PortfolioMock() {
+function ProductPreview() {
   return (
-    <div className="w-72 overflow-hidden rounded-2xl border border-white/15 bg-[#0a1730] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
-      <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5">
-        {["Home", "About", "Projects"].map((t) => (
-          <span key={t} className="rounded-full bg-white/10 px-2 py-0.5 text-[9px] text-white/70">
-            {t}
+    <div className="product-preview animate-float-soft">
+      <div className="product-preview__inner">
+        <div className="hidden flex-col gap-2 border-r border-[rgba(73,147,255,0.14)] bg-[rgba(5,23,47,0.85)] p-3 sm:flex">
+          <span className="mb-1 flex items-center gap-1.5 px-1">
+            <span className="h-4 w-4 rounded bg-gradient-to-br from-[#0865ff] to-[#4338ff]" aria-hidden />
+            <span className="h-1.5 w-10 rounded bg-white/40" aria-hidden />
           </span>
-        ))}
-      </div>
-      <div className="bg-gradient-to-br from-[#0d2247] to-[#07142F] px-5 py-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#60a5fa] to-[#7c3aed] text-xs font-bold text-white">
-            EO
-          </div>
-          <div>
-            <p className="text-sm font-bold text-white">Hello, I&apos;m Esther Okafor</p>
-            <p className="text-[10px] text-[#93c5fd]">Product Designer · Creative Problem Solver</p>
-          </div>
-        </div>
-        <div className="mt-3 flex items-center gap-2">
-          <span className="rounded-full bg-[#B7F000] px-2.5 py-1 text-[9px] font-bold text-[#07142F]">
-            Download Resume
-          </span>
-          {["in", "𝕏", "◉"].map((s) => (
-            <span key={s} className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-[8px] text-white">
-              {s}
+          {["Home", "Create", "Work", "Templates"].map((t, i) => (
+            <span
+              key={t}
+              className={`rounded-lg px-2 py-1.5 text-[10px] ${i === 1 ? "bg-[#0865ff]/25 text-white" : "text-[#7892b5]"}`}
+            >
+              {t}
             </span>
           ))}
         </div>
-      </div>
-      <div className="bg-[#F7FAFC] px-4 py-3">
-        <p className="text-[10px] font-bold text-[#0F172A]">Featured Projects</p>
-        <div className="mt-2 grid grid-cols-3 gap-1.5">
-          {[
-            ["from-[#1e3a8a] to-[#0ea5e9]", "Fintech"],
-            ["from-[#7c3aed] to-[#ec4899]", "E-commerce"],
-            ["from-[#0f766e] to-[#84cc16]", "Brand"],
-          ].map(([g, t]) => (
-            <div key={t}>
-              <div className={`h-12 rounded-md bg-gradient-to-br ${g}`} />
-              <p className="mt-1 text-[8px] font-semibold text-[#0F172A]">{t}</p>
-            </div>
-          ))}
+        <div className="min-w-0 p-3 md:p-4">
+          <div className="flex items-center gap-2 rounded-full border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-3 py-1.5">
+            <Icons.upload className="h-3.5 w-3.5 text-[#00c8ff]" />
+            <span className="text-[11px] text-[#7892b5]">Create Your Portfolio — upload a CV to begin</span>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {["PDF", "DOCX", "Photo", "Text"].map((t) => (
+              <span key={t} className="rounded-full border border-[rgba(73,147,255,0.28)] px-2.5 py-1 text-[10px] text-[#b6c8e2]">
+                {t}
+              </span>
+            ))}
+          </div>
+          <p className="mt-3 text-[11px] font-semibold text-white">Recent documents</p>
+          <ul className="mt-1.5 space-y-1.5">
+            {[
+              ["Executive CV.pdf", "Ready to review"],
+              ["Fintech deck.pptx", "Extracted"],
+              ["Site photos (6)", "Queued"],
+            ].map(([n, s]) => (
+              <li key={n} className="flex items-center justify-between rounded-lg bg-[rgba(7,26,51,0.75)] px-2.5 py-1.5">
+                <span className="flex items-center gap-2 text-[11px] text-white">
+                  <span className="flex h-5 w-5 items-center justify-center rounded bg-[#0865ff]/25 text-[#00c8ff]" aria-hidden>
+                    <Icons.brief className="h-3 w-3" />
+                  </span>
+                  {n}
+                </span>
+                <span className="text-[10px] text-[#64ddff]">{s}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function PhoneMock() {
-  return (
-    <div className="w-32 overflow-hidden rounded-[1.6rem] border border-white/20 bg-[#0a1730] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
-      <div className="mx-auto mt-1.5 h-1 w-10 rounded-full bg-white/20" />
-      <div className="px-3 py-3">
-        <div className="flex h-14 items-end justify-center rounded-lg bg-gradient-to-br from-[#1e3a8a] to-[#7c3aed] pb-1.5">
-          <p className="text-[8px] font-bold text-white">Esther Okafor</p>
-        </div>
-        <div className="mt-2 space-y-1">
-          <div className="h-1 rounded bg-white/25" />
-          <div className="h-1 w-2/3 rounded bg-white/25" />
-        </div>
-        <div className="mt-2 grid grid-cols-2 gap-1">
-          <div className="h-8 rounded bg-gradient-to-br from-[#0ea5e9] to-[#1e3a8a]" />
-          <div className="h-8 rounded bg-gradient-to-br from-[#ec4899] to-[#7c3aed]" />
-        </div>
-        <span className="mt-2 block rounded-full bg-[#B7F000] py-1 text-center text-[8px] font-bold text-[#07142F]">
-          Download
-        </span>
       </div>
     </div>
   );
@@ -84,116 +58,74 @@ function PhoneMock() {
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-heading" className="relative overflow-hidden bg-[#180F6E]">
-      {/* Ambient light + gloss streaks */}
+    <section aria-labelledby="hero-heading" className="relative overflow-hidden bg-[#020914]">
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#180F6E] via-[#1e1b8f] to-[#0d1442]" />
-        <div className="bg-streaks absolute inset-0" />
-        <div className="bg-gloss-top absolute inset-0" />
-        <div className="bg-blueprint absolute inset-0 opacity-70" />
-        <div className="animate-drift absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-[#2E7CF6]/40 blur-[130px]" />
-        <div className="animate-drift absolute right-[-80px] top-1/3 h-80 w-80 rounded-full bg-[#7c3aed]/30 blur-[130px]" style={{ animationDelay: "-7s" }} />
-        <div className="animate-glow-pulse absolute bottom-[-120px] left-[10%] h-72 w-[36rem] rounded-full bg-[#93c5fd]/20 blur-[130px]" />
+        <div className="wave-background" />
+        <div
+          className="absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 70% 25%, rgba(0,76,190,0.2) 0%, transparent 50%)" }}
+        />
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-6 pb-16 pt-6 md:pb-24">
         <div className="flex items-center justify-between">
           <Logo tone="dark" />
-          <nav aria-label="Primary" className="hidden items-center gap-7 text-sm text-[#cbd5e1] md:flex">
+          <nav aria-label="Primary" className="hidden items-center gap-7 text-sm text-[#b6c8e2] md:flex">
             <Link href="#features" className="transition-colors hover:text-white">Features</Link>
             <Link href="#how" className="transition-colors hover:text-white">How it works</Link>
             <Link href="/examples" className="transition-colors hover:text-white">Examples</Link>
             <Link href="/pricing" className="transition-colors hover:text-white">Pricing</Link>
           </nav>
-          <Link
-            href="/app/dashboard"
-            className="rounded-full bg-[#2E7CF6] px-5 py-2 text-sm font-semibold text-white shadow-[0_0_28px_rgba(46,124,246,0.5)] transition-all hover:shadow-[0_0_40px_rgba(46,124,246,0.7)]"
-          >
-            Build Your Portfolio
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/app/dashboard" className="hidden text-sm text-[#b6c8e2] hover:text-white sm:block">
+              Sign in
+            </Link>
+            <Link
+              href="/app/dashboard"
+              className="rounded-full bg-gradient-to-r from-[#0875ff] via-[#0755f5] to-[#4338ff] px-5 py-2 text-sm font-semibold text-white shadow-[0_6px_24px_rgba(0,93,255,0.24)] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_48px_rgba(0,112,255,0.32)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00c8ff]"
+            >
+              Start Your Journey Here
+            </Link>
+          </div>
         </div>
 
-        <div className="mt-12 grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
-          <div>
-            <p className="text-xs font-semibold tracking-[0.24em] text-[#B7CCE3]">
+        <div className="mt-12 grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="max-w-[600px]">
+            <p className="inline-flex items-center gap-2 rounded-full border border-[rgba(0,174,255,0.65)] bg-[rgba(0,95,255,0.08)] px-3.5 py-[7px] text-xs font-semibold tracking-[0.14em] text-[#00c8ff]">
               YOUR SKILLS. YOUR STORY. POWERED BY AI.
             </p>
             <h1
               id="hero-heading"
-              className="mt-5 text-5xl font-bold leading-[1.05] tracking-tight text-white md:text-6xl"
+              className="mt-6 text-[clamp(2.8rem,5vw,4.5rem)] font-semibold leading-[1.05] tracking-[-0.055em] text-[#f4f8ff]"
+              style={{ textWrap: "balance" }}
             >
-              Turn Your CV, Resume or Projects into a Stunning Portfolio —{" "}
-              <span className="bg-gradient-to-r from-[#7dd3fc] via-[#38bdf8] to-[#2E7CF6] bg-clip-text text-transparent">
-                Instantly.
-              </span>
+              Turn Your CV into a Stunning Portfolio —{" "}
+              <span className="text-gradient">Instantly.</span>
             </h1>
-            <p className="mt-6 max-w-md leading-relaxed text-[#cbd5e1]">
+            <p className="mt-6 max-w-[48ch] text-lg leading-[1.7] text-[#b6c8e2]">
               Upload your CV, resume or project document, let DossierAI build a
               complete, modern, professional portfolio for you — in minutes.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/app/dashboard"
-                className="group inline-flex items-center gap-2 rounded-full bg-[#2E7CF6] px-7 py-3.5 font-semibold text-white shadow-[0_0_36px_rgba(46,124,246,0.55)] transition-all hover:shadow-[0_0_54px_rgba(46,124,246,0.75)]"
+                className="group inline-flex min-h-[46px] items-center gap-3 rounded-full bg-gradient-to-r from-[#0875ff] via-[#0755f5] to-[#4338ff] px-[22px] py-3 text-sm font-semibold text-white shadow-[0_6px_24px_rgba(0,93,255,0.24)] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_48px_rgba(0,112,255,0.32)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00c8ff]"
               >
                 Start Your Journey Here
                 <Icons.arrow className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link href="/examples" className="text-sm font-medium text-[#cbd5e1] hover:text-white">
-                Explore Examples →
+              <Link
+                href="/examples"
+                className="inline-flex min-h-[46px] items-center rounded-full border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-[22px] py-3 text-sm font-semibold text-[#f4f8ff] transition-all hover:-translate-y-0.5 hover:border-[rgba(0,174,255,0.65)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00c8ff]"
+              >
+                Explore Examples
               </Link>
             </div>
           </div>
 
-          {/* Floating composition */}
-          <div className="relative hidden min-h-[480px] select-none lg:block" aria-hidden>
-            <ul className="absolute left-0 top-6 z-10 space-y-2.5">
-              {FILE_BADGES.map((f, i) => (
-                <li
-                  key={f.label}
-                  className={`animate-float rounded-xl ${f.bg} px-3.5 py-2 text-sm font-bold text-white`}
-                  style={{ animationDelay: `${i * -2.3}s` }}
-                >
-                  {f.label}
-                </li>
-              ))}
-            </ul>
-
-            <svg viewBox="0 0 120 200" className="absolute left-16 top-32 w-24 text-[#38bdf8]/70" fill="none">
-              <path d="M8 8 C 70 40, 90 90, 104 188" stroke="currentColor" strokeWidth="2" strokeDasharray="6 6" />
-              <path d="M96 172l8 18 10-16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-            <p className="absolute left-0 top-[19rem] w-40 text-xs italic leading-snug text-[#7d8aa5]">
-              From your files… to a global-ready portfolio.
-            </p>
-
-            <div className="animate-float-soft absolute right-24 top-0 w-64 rounded-2xl border border-white/15 bg-white/[0.07] p-5 shadow-[0_0_60px_rgba(37,99,235,0.35)] backdrop-blur-xl">
-              <p className="text-sm font-semibold text-white">Create Your Portfolio</p>
-              <p className="mt-1 text-[11px] leading-snug text-[#93a4c4]">
-                Upload your CV, resume or project document to get started.
-              </p>
-              <div className="mt-4 rounded-xl border-2 border-dashed border-[#38bdf8]/40 bg-[#2563EB]/10 px-4 py-6 text-center">
-                <Icons.upload className="mx-auto h-6 w-6 text-[#38bdf8]" />
-                <p className="mt-2 text-[11px] text-white">Drag & drop your file here</p>
-                <p className="text-[10px] text-[#7d8aa5]">or click to upload</p>
-              </div>
-              <div className="mt-3 grid grid-cols-3 gap-1.5 text-center">
-                {["Upload CV / Resume", "Upload Project", "Take a Photo"].map((t) => (
-                  <div key={t} className="rounded-lg bg-white/10 px-1 py-2 text-[9px] leading-tight text-white">
-                    {t}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="animate-float absolute bottom-0 right-0" style={{ animationDelay: "-3.5s" }}>
-              <PortfolioMock />
-            </div>
-            <div className="animate-float absolute bottom-6 right-[19rem]" style={{ animationDelay: "-5s" }}>
-              <PhoneMock />
-            </div>
-
-            <div className="animate-float-soft absolute right-2 top-2 max-w-[10rem] rounded-xl border border-violet-300/30 bg-violet-400/15 px-3 py-2 text-[10px] leading-snug text-violet-100 backdrop-blur" style={{ animationDelay: "-1.5s" }}>
+          <div className="relative hidden select-none lg:block" aria-hidden>
+            <ProductPreview />
+            <div className="animate-float absolute -right-2 -top-6 max-w-[10rem] rounded-xl border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.85)] px-3 py-2 text-[10px] leading-snug text-[#b6c8e2] backdrop-blur">
               Professional. Modern. Global Standard.
             </div>
           </div>

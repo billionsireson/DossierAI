@@ -12,19 +12,18 @@ export const metadata = {
 
 export default function ExamplesPage() {
   return (
-    <div className="bg-[#F4F6FB] text-[#0F172A]">
-      <div className="bg-[#180F6E]">
+    <div className="bg-[#020914] text-[#f4f8ff]">
+      <div className="border-b border-[rgba(73,147,255,0.14)] bg-[rgba(2,9,20,0.72)]">
         <Navbar />
       </div>
-      <main className="mx-auto w-full max-w-6xl px-6 py-10">
-        <Link href="/" className="text-sm text-[#64748B] hover:text-[#0F172A]">
+      <main id="main" className="mx-auto w-full max-w-6xl px-6 py-10">
+        <Link href="/" className="text-sm text-[#b6c8e2] hover:text-white">
           ← Back
         </Link>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">Template showcase</h1>
-        <p className="mt-2 max-w-2xl text-[#64748B]">
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight">Template showcase</h1>
+        <p className="mt-2 max-w-2xl text-[#b6c8e2]">
           Every template implements the same portfolio schema — data stays the
-          same while presentation changes. Full interactive previews land with
-          the portfolio renderer (Milestone 5).
+          same while presentation changes.
         </p>
       </main>
       <TemplateShowcase compact />
