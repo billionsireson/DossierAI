@@ -100,13 +100,15 @@ export function Dropzone({
           setDragging(false);
           void upload(e.dataTransfer.files);
         }}
-        className={`rounded-2xl border-2 border-dashed p-10 text-center transition-colors ${
-          dragging ? "border-[#2563EB] bg-[#eff6ff]" : "border-[#cbd5e1] bg-white"
+        className={`rounded-[18px] border-2 border-dashed p-10 text-center transition-all ${
+          dragging
+            ? "border-[#00c8ff] bg-[rgba(0,104,255,0.12)] shadow-[0_0_30px_rgba(0,102,255,0.2)]"
+            : "border-[rgba(73,147,255,0.28)] bg-[rgba(5,24,49,0.78)]"
         }`}
       >
-        <p className="font-semibold text-[#0F172A]">Drag files here</p>
-        <p className="mt-1 text-sm text-[#64748B]">or</p>
-        <span className="mt-3 inline-block rounded-xl bg-[#2563EB] px-5 py-2.5 font-semibold text-white">
+        <p className="font-semibold text-white">Drag files here</p>
+        <p className="mt-1 text-sm text-[#b6c8e2]">or</p>
+        <span className="mt-3 inline-block rounded-full bg-gradient-to-r from-[#0875ff] to-[#4338ff] px-5 py-2.5 text-sm font-semibold text-white">
           Browse files
         </span>
         <input
@@ -120,14 +122,14 @@ export function Dropzone({
             if (e.target.files) void upload(e.target.files);
           }}
         />
-        <p className="mt-4 text-xs text-[#64748B]">
+        <p className="mt-4 text-xs text-[#7892b5]">
           Accepted: PDF, DOCX, TXT, JPG, PNG, WebP · Max {uploadConfig.maxUploadMB}MB per file
         </p>
       </div>
 
-      {state === "uploading" && <p className="mt-4 text-sm text-[#64748B]">Uploading…</p>}
+      {state === "uploading" && <p className="mt-4 text-sm text-[#b6c8e2]">Uploading…</p>}
       {error && (
-        <p role="alert" className="mt-4 rounded-xl bg-[#fef2f2] p-3 text-sm text-[#b91c1c]">
+        <p role="alert" className="mt-4 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
           {error}
         </p>
       )}
@@ -137,13 +139,13 @@ export function Dropzone({
           {rows.map((r) => (
             <li
               key={r.name}
-              className="flex items-center justify-between gap-3 rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-sm"
+              className="flex items-center justify-between gap-3 rounded-xl border border-[rgba(73,147,255,0.28)] bg-[rgba(5,24,49,0.78)] px-4 py-2.5 text-sm"
             >
-              <span className="font-medium text-[#0F172A]">{r.name}</span>
-              <span className="flex items-center gap-3 text-[#64748B]">
+              <span className="font-medium text-white">{r.name}</span>
+              <span className="flex items-center gap-3 text-[#b6c8e2]">
                 {r.size > 0 ? `${formatMB(r.size)} · ` : ""}{r.status}
                 {r.reviewHref && (
-                  <a href={r.reviewHref} className="font-semibold text-[#2E7CF6] hover:underline">
+                  <a href={r.reviewHref} className="font-semibold text-[#00c8ff] hover:underline focus-visible:outline-2 focus-visible:outline-[#00c8ff]">
                     Review →
                   </a>
                 )}

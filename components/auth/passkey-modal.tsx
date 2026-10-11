@@ -8,10 +8,10 @@ export function PasskeyModal() {
   const [state, action, pending] = useActionState(setPasskey, undefined);
   if (dismissed) return null;
   return (
-    <div role="dialog" aria-modal="true" aria-label="Set your passkey" className="fixed inset-0 z-50 flex items-center justify-center bg-[#0d1442]/70 p-6 backdrop-blur-sm">
-      <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl">
-        <h2 className="text-lg font-bold">Lock your account with a passkey</h2>
-        <p className="mt-1 text-sm text-[#64748B]">
+    <div role="dialog" aria-modal="true" aria-label="Set your passkey" className="fixed inset-0 z-50 flex items-center justify-center bg-[#020914]/80 p-6 backdrop-blur-sm">
+      <div className="glass-panel w-full max-w-sm p-6 text-white shadow-[0_0_60px_rgba(0,102,255,0.25)]">
+        <h2 className="text-lg font-semibold">Lock your account with a passkey</h2>
+        <p className="mt-1 text-sm text-[#b6c8e2]">
           To prevent unauthorized access to your account, set a unique 4–8 digit passkey.
         </p>
         <form action={action} className="mt-4 space-y-3">
@@ -23,21 +23,17 @@ export function PasskeyModal() {
               pattern="[0-9]{4,8}"
               required
               placeholder="••••"
-              className="w-full rounded-xl border border-[#E2E8F0] px-4 py-2.5 text-center text-lg tracking-[0.5em]"
+              className="ocean-input text-center text-lg tracking-[0.5em]"
             />
           </label>
           {state?.message && (
-            <p role="status" className="rounded-xl bg-[#F4F6FB] p-3 text-sm">{state.message}</p>
+            <p role="status" className="glass-panel p-3 text-sm text-white">{state.message}</p>
           )}
-          <button
-            type="submit"
-            disabled={pending}
-            className="w-full rounded-xl bg-[#180F6E] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
-          >
+          <button type="submit" disabled={pending} className="ocean-btn w-full">
             {pending ? "Setting…" : "Set passkey"}
           </button>
         </form>
-        <button onClick={() => setDismissed(true)} className="mt-2 w-full py-1 text-center text-xs text-[#94a3b8] hover:text-[#475569]">
+        <button onClick={() => setDismissed(true)} className="mt-2 w-full py-1 text-center text-xs text-[#7892b5] hover:text-white">
           Remind me later
         </button>
       </div>

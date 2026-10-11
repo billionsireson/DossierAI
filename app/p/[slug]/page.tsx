@@ -44,16 +44,16 @@ export default async function PublicPortfolioPage({
   if (!portfolio) notFound();
 
   return (
-    <main className="min-h-screen bg-[#F7FAFC]">
+    <main className="min-h-screen bg-[#020914]">
       <div className="mx-auto max-w-4xl px-6 py-10">
         <PortfolioRenderer portfolio={portfolio} />
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-4 text-sm">
-          <p className="text-[#64748B]">
-            Built with <Link href="/" className="font-semibold text-[#0F172A]">DossierAI</Link>
+        <div className="glass-panel mt-6 flex flex-wrap items-center justify-between gap-3 p-4 text-sm">
+          <p className="text-[#b6c8e2]">
+            Built with <Link href="/" className="font-semibold text-white">DossierAI</Link>
           </p>
           <a
             href={`/p/${slug}/resume`}
-            className="rounded-lg bg-[#07142F] px-4 py-2 font-medium text-white hover:bg-[#0f2452]"
+            className="ocean-btn !min-h-0 px-4 py-2"
           >
             Download Resume
           </a>

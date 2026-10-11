@@ -11,32 +11,31 @@ export default async function CreditsPage() {
   const user = await getCurrentUser();
   const bal = await balance(userId);
   const txs = await history(userId);
-
   return (
-    <main className="py-2">
-      <h1 className="text-2xl font-bold">Credits</h1>
-      <div className="mt-5 rounded-2xl border border-[#E2E8F0] bg-white p-6">
-        <p className="text-sm text-[#64748B]">Balance</p>
-        <p className="mt-1 text-4xl font-bold">{bal}</p>
-        <p className="mt-3 text-sm text-[#64748B]">
+    <main id="main" className="py-2">
+      <h1 className="text-2xl font-semibold text-white">Credits</h1>
+      <div className="glass-panel mt-5 p-6">
+        <p className="text-sm text-[#7892b5]">Balance</p>
+        <p className="mt-1 text-4xl font-bold text-white">{bal}</p>
+        <p className="mt-3 text-sm text-[#b6c8e2]">
           {user?.plan ?? demoUser.plan} plan · {PLANS[(user?.plan ?? demoUser.plan) as keyof typeof PLANS].creditsPerMonth} credits/month.
           Generation, regeneration and AI rewrites consume credits; manual
           edits never do.
         </p>
       </div>
-      <div className="mt-4 rounded-2xl border border-[#E2E8F0] bg-white p-6">
-        <h2 className="font-semibold">History</h2>
+      <div className="glass-panel mt-4 p-6">
+        <h2 className="font-semibold text-white">History</h2>
         {txs.length === 0 ? (
-          <p className="mt-2 text-sm text-[#64748B]">
+          <p className="mt-2 text-sm text-[#b6c8e2]">
             No transactions yet. Generate a portfolio or claim a demo grant to
             start the ledger.
           </p>
         ) : (
           <ul className="mt-3 space-y-2 text-sm">
             {txs.map((t) => (
-              <li key={t.id} className="flex items-center justify-between rounded-lg bg-[#F7FAFC] px-3 py-2">
+              <li key={t.id} className="flex items-center justify-between rounded-lg bg-[rgba(7,26,51,0.75)] px-3 py-2 text-white">
                 <span className="font-medium">{t.type}</span>
-                <span className={t.amount < 0 ? "text-[#b91c1c]" : "text-[#166534]"}>
+                <span className={t.amount < 0 ? "text-[#ff8a8a]" : "text-[#64ddff]"}>
                   {t.amount > 0 ? `+${t.amount}` : t.amount}
                 </span>
               </li>

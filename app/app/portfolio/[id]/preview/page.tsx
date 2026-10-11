@@ -32,25 +32,25 @@ export default async function PreviewPage({
   const studioTheme = row?.active ? row.theme : null;
 
   return (
-    <main className="py-2">
+    <main id="main" className="py-2">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link href="/app/dashboard" className="text-sm text-[#64748B] hover:text-[#0F172A]">
+        <Link href="/app/dashboard" className="text-sm text-[#7892b5] hover:text-white">
           ← Dashboard
         </Link>
         <div className="flex gap-2 text-sm">
-          <span className="rounded-lg border border-[#E2E8F0] bg-white px-3 py-1.5 text-[#64748B]">
+          <span className="rounded-full border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-3 py-1.5 text-[#b6c8e2]">
             Desktop · Tablet · Mobile responsive
           </span>
           <Link
             href={`/app/portfolio/${portfolio.id}/edit`}
-            className="rounded-lg bg-[#2563EB] px-3 py-1.5 font-medium text-white hover:bg-[#1d4ed8]"
+            className="rounded-full bg-gradient-to-r from-[#0875ff] to-[#4338ff] px-4 py-1.5 font-semibold text-white"
           >
             Edit
           </Link>
         </div>
       </div>
-      <h1 className="mt-3 text-2xl font-bold">Preview</h1>
-      <p className="mt-1 text-sm text-[#64748B]">
+      <h1 className="mt-3 text-2xl font-semibold text-white">Preview</h1>
+      <p className="mt-1 text-sm text-[#b6c8e2]">
         Faithful to the published result. Template: {portfolio.theme.templateId}.
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -62,10 +62,10 @@ export default async function PreviewPage({
             key={t}
             href={`/app/portfolio/${portfolio.id}/preview?template=${t}`}
             aria-current={active === t ? "true" : undefined}
-            className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-shadow ${
+            className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-all focus-visible:outline-2 focus-visible:outline-[#00c8ff] ${
               active === t
-                ? "bg-[#07142F] text-white shadow-[0_0_20px_rgba(7,20,47,0.4)]"
-                : "border border-[#E2E8F0] bg-white hover:bg-[#F7FAFC]"
+                ? "bg-gradient-to-r from-[#0875ff] to-[#4338ff] text-white shadow-[0_0_24px_rgba(0,102,255,0.35)]"
+                : "border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] text-[#b6c8e2] hover:border-[rgba(0,174,255,0.65)] hover:text-white"
             }`}
           >
             {TEMPLATE_LABELS[t]}

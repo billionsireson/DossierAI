@@ -24,24 +24,24 @@ export function CreditGrantForm() {
   }
 
   return (
-    <form onSubmit={(e) => void submit(e)} className="mt-3 flex items-end gap-2">
+    <form onSubmit={(e) => void submit(e)} className="mt-3 flex items-end gap-2 text-white">
       <label className="text-sm">
-        <span className="mb-1 block font-medium">Adjust credits (demo-user)</span>
+        <span className="mb-1 block font-medium">Adjust credits (signed-in user)</span>
         <input
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           inputMode="numeric"
-          className="w-28 rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm"
+          className="ocean-input w-28"
         />
       </label>
       <button
         type="submit"
-        className="rounded-lg bg-[#07142F] px-4 py-2 text-sm font-medium text-white hover:bg-[#0f2452]"
+        className="rounded-full bg-gradient-to-r from-[#0875ff] to-[#4338ff] px-4 py-2 text-sm font-semibold text-white"
       >
         Grant
       </button>
       {message && (
-        <span role="status" className="text-sm text-[#334155]">
+        <span role="status" className="text-sm text-[#b6c8e2]">
           {message}
         </span>
       )}

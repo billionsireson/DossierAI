@@ -31,22 +31,22 @@ export function UploadFlow({ kind }: { kind: UploadKind }) {
 
   return (
     <div>
-      <h1 className="mt-3 text-2xl font-bold">{copy.title}</h1>
-      <p className="mt-1 text-sm text-[#64748B]">{copy.desc}</p>
+      <h1 className="mt-3 text-2xl font-semibold text-white">{copy.title}</h1>
+      <p className="mt-1 text-sm text-[#b6c8e2]">{copy.desc}</p>
       <div className="mt-5">
         {kind === "text" ? (
           <PasteBox />
         ) : (
           <>
             {kind === "project" && (
-              <label className="mb-4 block max-w-md text-sm">
+              <label className="mb-4 block max-w-md text-sm text-white">
                 <span className="mb-1 block font-medium">What is this project?</span>
                 <input
                   value={projectTitle}
                   onChange={(e) => setProjectTitle(e.target.value)}
                   placeholder="e.g. Fintech Dashboard"
                   maxLength={120}
-                  className="w-full rounded-xl border border-[#E2E8F0] bg-white px-3 py-2 text-sm"
+                  className="ocean-input"
                 />
               </label>
             )}
@@ -58,7 +58,7 @@ export function UploadFlow({ kind }: { kind: UploadKind }) {
               projectTitle={kind === "project" ? projectTitle || undefined : undefined}
             />
             {kind === "image" && (
-              <p className="mt-3 text-xs text-[#64748B]">
+              <p className="mt-3 text-xs text-[#7892b5]">
                 On mobile, browsing files offers the camera (Take a Shot) where the browser supports it.
               </p>
             )}

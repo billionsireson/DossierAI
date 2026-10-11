@@ -13,7 +13,7 @@ export function GoogleButton() {
   return (
     <Link
       href="/api/auth/google"
-      className="block rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-center text-sm font-semibold hover:bg-[#F7FAFC]"
+      className="ocean-btn-ghost w-full"
     >
       Continue with Google
     </Link>

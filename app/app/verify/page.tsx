@@ -10,12 +10,12 @@ export default async function VerifyPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   return (
-    <main className="py-2">
-      <Link href="/app/dashboard" className="text-sm text-[#64748B] hover:text-[#0F172A]">
+    <main id="main" className="py-2">
+      <Link href="/app/dashboard" className="text-sm text-[#7892b5] hover:text-white">
         ← Dashboard
       </Link>
-      <h1 className="mt-3 text-2xl font-bold">Verify it&apos;s really you</h1>
-      <p className="mt-1 text-sm text-[#64748B]">
+      <h1 className="mt-3 text-2xl font-semibold text-white">Verify it&apos;s really you</h1>
+      <p className="mt-1 text-sm text-[#b6c8e2]">
         Confirm your email and phone to unlock editing. Codes expire in 15 minutes.
       </p>
       <div className="mt-5">

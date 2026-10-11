@@ -13,22 +13,22 @@ const TEMPLATES = [
 
 export default function TemplatesPage() {
   return (
-    <main className="py-2">
-      <h1 className="text-2xl font-bold">Templates</h1>
-      <p className="mt-1 text-sm text-[#64748B]">
-        One portfolio schema, four presentations. Switching never loses content.
+    <main id="main" className="py-2">
+      <h1 className="text-2xl font-semibold text-white">Templates</h1>
+      <p className="mt-1 text-sm text-[#b6c8e2]">
+        One portfolio schema, six presentations. Switching never loses content.
       </p>
       <ul className="mt-5 grid gap-4 md:grid-cols-2">
         {TEMPLATES.map((t) => (
           <li
             key={t.id}
-            className="rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(37,99,235,0.2)]"
+            className="glass-panel p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(0,174,255,0.65)]"
           >
-            <h2 className="font-semibold">{t.name}</h2>
-            <p className="mt-1 text-sm text-[#64748B]">{t.desc}</p>
+            <h2 className="font-semibold text-white">{t.name}</h2>
+            <p className="mt-1 text-sm text-[#b6c8e2]">{t.desc}</p>
             <Link
               href={`/app/portfolio/demo-fintech/preview?template=${t.id}`}
-              className="mt-4 inline-block rounded-lg bg-[#07142F] px-3.5 py-1.5 text-sm font-medium text-white hover:bg-[#0f2452]"
+              className="mt-4 inline-block rounded-full bg-gradient-to-r from-[#0875ff] to-[#4338ff] px-3.5 py-1.5 text-sm font-semibold text-white"
             >
               Preview with sample data →
             </Link>

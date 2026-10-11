@@ -8,8 +8,8 @@ export const metadata = { title: "My Portfolios" };
 export default async function PortfoliosPage() {
   const portfolios = await listPortfolios(await getCurrentUserId());
   return (
-    <main className="py-2">
-      <h1 className="text-2xl font-bold">My Portfolios</h1>
+    <main id="main" className="py-2">
+      <h1 className="text-2xl font-semibold text-white">My Portfolios</h1>
       <ul className="mt-5 grid gap-4 md:grid-cols-2">
         {portfolios.map((p) => (
           <li key={p.id}>

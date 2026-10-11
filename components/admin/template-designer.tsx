@@ -15,9 +15,9 @@ function ThemeEditor({
   value: { hero: string; font: string; radius: string; accent: string; darkSections: boolean };
   onChange: (v: { hero: string; font: string; radius: string; accent: string; darkSections: boolean }) => void;
 }) {
-  const sel = "rounded-lg border border-[#E2E8F0] px-2 py-1.5 text-sm";
+  const sel = "rounded-lg border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-2 py-1.5 text-sm text-white";
   return (
-    <div className="mt-2 grid gap-2 rounded-xl bg-[#F7FAFC] p-3 text-sm sm:grid-cols-2">
+    <div className="mt-2 grid gap-2 rounded-xl bg-[rgba(7,26,51,0.75)] p-3 text-sm text-white sm:grid-cols-2">
       <label className="flex flex-col gap-1">
         Hero
         <select className={sel} value={value.hero} onChange={(e) => onChange({ ...value, hero: e.target.value })}>
@@ -49,7 +49,7 @@ function ThemeEditor({
             type="color"
             value={value.accent}
             onChange={(e) => onChange({ ...value, accent: e.target.value })}
-            className="h-9 w-12 cursor-pointer rounded border border-[#E2E8F0]"
+            className="h-9 w-12 cursor-pointer rounded border border-[rgba(73,147,255,0.28)] bg-transparent"
           />
           <code className="text-xs">{value.accent}</code>
         </span>
@@ -111,13 +111,13 @@ export function TemplateDesigner() {
     }
   }
 
-  if (error && !rows) return <p role="alert" className="text-sm text-[#b91c1c]">{error}</p>;
-  if (!rows) return <p className="text-sm text-[#64748B]">Loading templates…</p>;
+  if (error && !rows) return <p role="alert" className="text-sm text-red-300">{error}</p>;
+  if (!rows) return <p className="text-sm text-[#b6c8e2]">Loading templates…</p>;
 
   return (
     <div className="space-y-3">
       {error && (
-        <p role="alert" className="rounded-xl bg-[#fef2f2] p-3 text-sm text-[#b91c1c]">{error}</p>
+        <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">{error}</p>
       )}
       {rows.map((t) => {
         const d = drafts[t.key] ?? {};
@@ -128,11 +128,11 @@ export function TemplateDesigner() {
           JSON.stringify({ theme, plans, active }) !==
           JSON.stringify({ theme: t.theme ?? DEFAULT_THEME, plans: t.plans, active: t.active });
         return (
-          <article key={t.key} className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+          <article key={t.key} className="rounded-[18px] border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] p-5 text-white">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h3 className="font-semibold">{t.name} <span className="font-mono text-xs text-[#94a3b8]">{t.key}</span></h3>
-                <p className="text-xs text-[#64748B]">
+                <h3 className="font-semibold">{t.name} <span className="font-mono text-xs text-[#7892b5]">{t.key}</span></h3>
+                <p className="text-xs text-[#b6c8e2]">
                   {t.theme ? "Studio theme" : "Code renderer"} · {plans.length === 0 ? "all plans" : plans.join(", ")}
                 </p>
               </div>
@@ -148,20 +148,20 @@ export function TemplateDesigner() {
                 <button
                   disabled={!dirty || saving === t.key}
                   onClick={() => void save(t.key, { theme, plans, active })}
-                  className="rounded-lg bg-[#07142F] px-3.5 py-1.5 font-medium text-white disabled:opacity-40"
+                  className="rounded-full bg-gradient-to-r from-[#0875ff] to-[#4338ff] px-3.5 py-1.5 font-semibold text-white disabled:opacity-40"
                 >
                   {saving === t.key ? "Saving…" : "Save"}
                 </button>
                 <a
                   href={`/app/portfolio/demo-fintech/preview?template=${t.key}`}
-                  className="rounded-lg border border-[#E2E8F0] px-3.5 py-1.5 hover:bg-[#F7FAFC]"
+                  className="rounded-full border border-[rgba(73,147,255,0.28)] px-3.5 py-1.5 hover:border-[rgba(0,174,255,0.65)]"
                 >
                   Preview →
                 </a>
               </div>
             </div>
             <div className="mt-3">
-              <p className="text-xs font-semibold text-[#475569]">Plans (empty = everyone)</p>
+              <p className="text-xs font-semibold text-[#b6c8e2]">Plans (empty = everyone)</p>
               <div className="mt-1 flex gap-3 text-sm">
                 {PLAN_IDS.map((p) => (
                   <label key={p} className="flex items-center gap-1.5">
@@ -188,7 +188,7 @@ export function TemplateDesigner() {
               onChange={(v) => setDrafts((x) => ({ ...x, [t.key]: { ...d, theme: v } }))}
             />
             {!t.theme && (
-              <p className="mt-2 text-xs text-[#94a3b8]">
+              <p className="mt-2 text-xs text-[#7892b5]">
                 Saving a theme switches this template from its code renderer to your studio design.
               </p>
             )}

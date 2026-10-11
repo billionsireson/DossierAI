@@ -91,15 +91,14 @@ export function EditorForm({ initial }: { initial: Portfolio }) {
     | { body?: string }
     | undefined;
 
-  const input =
-    "w-full rounded-lg border border-[#E2E8F0] bg-white px-3 py-2 text-sm text-[#0F172A]";
+  const input = "ocean-input";
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       <div className="space-y-4">
-        <section className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
-          <h2 className="font-semibold">Content</h2>
-          <div className="mt-3 grid gap-3">
+        <section className="glass-panel p-5">
+          <h2 className="font-semibold text-white">Content</h2>
+          <div className="mt-3 grid gap-3 text-white">
             <label className="block text-sm">
               <span className="mb-1 block font-medium">Name</span>
               <input className={input} value={portfolio.profile.name} onChange={(e) => setProfile("name", e.target.value)} />
@@ -131,21 +130,21 @@ export function EditorForm({ initial }: { initial: Portfolio }) {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
-          <h2 className="font-semibold">Sections</h2>
+        <section className="glass-panel p-5">
+          <h2 className="font-semibold text-white">Sections</h2>
           <ul className="mt-3 space-y-2">
             {ordered.map((s, i) => (
               <li
                 key={s.id}
-                className="flex items-center justify-between gap-2 rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm"
+                className="flex items-center justify-between gap-2 rounded-xl border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-3 py-2 text-sm text-white"
               >
                 <span className="font-medium capitalize">{s.type}</span>
                 <span className="flex items-center gap-1">
-                  <button aria-label={`Move ${s.type} up`} onClick={() => move(i, -1)} className="rounded px-2 py-1 hover:bg-[#F7FAFC]">↑</button>
-                  <button aria-label={`Move ${s.type} down`} onClick={() => move(i, 1)} className="rounded px-2 py-1 hover:bg-[#F7FAFC]">↓</button>
+                  <button aria-label={`Move ${s.type} up`} onClick={() => move(i, -1)} className="rounded px-2 py-1 text-[#b6c8e2] hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-[#00c8ff]">↑</button>
+                  <button aria-label={`Move ${s.type} down`} onClick={() => move(i, 1)} className="rounded px-2 py-1 text-[#b6c8e2] hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-[#00c8ff]">↓</button>
                   <button
                     onClick={() => toggle(s.id)}
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${s.visible ? "bg-[#dcfce7] text-[#166534]" : "bg-[#f1f5f9] text-[#64748B]"}`}
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${s.visible ? "bg-[#00c8ff]/20 text-[#64ddff]" : "bg-white/10 text-[#7892b5]"}`}
                   >
                     {s.visible ? "visible" : "hidden"}
                   </button>
@@ -157,7 +156,7 @@ export function EditorForm({ initial }: { initial: Portfolio }) {
       </div>
 
       <aside className="space-y-4">
-        <section className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+        <section className="glass-panel p-5 text-white">
           <h2 className="font-semibold">Design</h2>
           <label className="mt-3 block text-sm">
             <span className="mb-1 block font-medium">Template</span>
@@ -179,19 +178,19 @@ export function EditorForm({ initial }: { initial: Portfolio }) {
             <button
               onClick={() => void save()}
               disabled={saving}
-              className="flex-1 rounded-xl bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1d4ed8] disabled:opacity-60"
+              className="ocean-btn flex-1"
             >
               {saving ? "Saving…" : "Save"}
             </button>
             <a
               href={`/app/portfolio/${portfolio.id}/preview?template=${portfolio.theme.templateId}`}
-              className="rounded-xl border border-[#E2E8F0] px-4 py-2.5 text-sm font-medium hover:bg-[#F7FAFC]"
+              className="ocean-btn-ghost"
             >
               Preview
             </a>
           </div>
-          {message && <p role="status" className="mt-3 text-sm text-[#334155]">{message}</p>}
-          <p className="mt-2 text-xs text-[#94a3b8]">Version {portfolio.version} · every save snapshots.</p>
+          {message && <p role="status" className="mt-3 text-sm text-[#b6c8e2]">{message}</p>}
+          <p className="mt-2 text-xs text-[#7892b5]">Version {portfolio.version} · every save snapshots.</p>
         </section>
       </aside>
     </div>

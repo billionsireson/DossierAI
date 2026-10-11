@@ -31,21 +31,21 @@ const OPTIONS = [
 
 export default function CreatePage() {
   return (
-    <main className="py-2">
-      <Link href="/app/dashboard" className="text-sm text-[#64748B] hover:text-[#0F172A]">
+    <main id="main" className="py-2">
+      <Link href="/app/dashboard" className="text-sm text-[#7892b5] hover:text-white">
         ← Dashboard
       </Link>
-      <h1 className="mt-3 text-2xl font-bold">What would you like to use?</h1>
+      <h1 className="mt-3 text-2xl font-semibold text-white">What would you like to use?</h1>
       <ul className="mt-5 grid gap-4 sm:grid-cols-2">
         {OPTIONS.map((o) => (
           <li key={o.href}>
             <Link
               href={o.href}
-              className="block h-full rounded-2xl border border-[#E2E8F0] bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-[#2E7CF6]/50 hover:shadow-[0_12px_36px_rgba(46,124,246,0.2)]"
+              className="glass-panel block h-full p-5 transition-all duration-200 hover:-translate-y-1 hover:border-[rgba(0,174,255,0.65)] hover:shadow-[0_0_30px_rgba(0,102,255,0.2)] focus-visible:outline-2 focus-visible:outline-[#00c8ff]"
             >
-              <h2 className="font-semibold">{o.title}</h2>
-              <p className="mt-0.5 text-sm text-[#64748B]">{o.desc}</p>
-              <p className="mt-2 text-sm text-[#334155]">{o.detail}</p>
+              <h2 className="font-semibold text-white">{o.title}</h2>
+              <p className="mt-0.5 text-sm text-[#00c8ff]">{o.desc}</p>
+              <p className="mt-2 text-sm text-[#b6c8e2]">{o.detail}</p>
             </Link>
           </li>
         ))}

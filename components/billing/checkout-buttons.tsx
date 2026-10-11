@@ -41,17 +41,17 @@ export function CheckoutButtons() {
           key={p.plan}
           disabled={busy !== null}
           onClick={() => void checkout(p.plan, p.price)}
-          className="w-full rounded-xl bg-[#180F6E] px-4 py-3 text-sm font-semibold text-white hover:bg-[#2320a8] disabled:opacity-60"
+          className="ocean-btn w-full"
         >
           {busy === p.plan ? "Redirecting to Paystack…" : p.label}
         </button>
       ))}
       {error && (
-        <p role="alert" className="rounded-xl bg-[#fef2f2] p-3 text-sm text-[#b91c1c]">
+        <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
           {error}
         </p>
       )}
-      <p className="text-xs text-[#94a3b8]">
+      <p className="text-xs text-[#7892b5]">
         Test mode: pay with card 4084 0840 8408 4081, any CVV and future expiry.
       </p>
     </div>

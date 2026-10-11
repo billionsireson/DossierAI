@@ -32,22 +32,22 @@ export function VerifyPanel({
     value?: string | null,
     verified?: string | null,
   ) => (
-    <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+    <div className="glass-panel p-5 text-white">
       <h2 className="font-semibold capitalize">{channel}</h2>
-      <p className="mt-1 text-sm text-[#64748B]">{value ?? "Not provided"}</p>
+      <p className="mt-1 text-sm text-[#b6c8e2]">{value ?? "Not provided"}</p>
       {verified ? (
-        <p className="mt-2 inline-block rounded-full bg-[#dcfce7] px-3 py-1 text-xs font-semibold text-[#166534]">
+        <p className="mt-2 inline-block rounded-full bg-[#00c8ff]/20 px-3 py-1 text-xs font-semibold text-[#64ddff]">
           Verified
         </p>
       ) : (
         <div className="mt-3 space-y-2">
           <button
             onClick={() => void send(channel)}
-            className="rounded-lg border border-[#E2E8F0] px-3 py-1.5 text-sm font-medium hover:bg-[#F7FAFC]"
+            className="rounded-full border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-3 py-1.5 text-sm font-semibold text-white hover:border-[rgba(0,174,255,0.65)]"
           >
             Send code
           </button>
-          {sent[channel] && <p className="text-xs text-[#92400e]">{sent[channel]}</p>}
+          {sent[channel] && <p className="text-xs text-amber-200">{sent[channel]}</p>}
           <form action={action} className="flex gap-2">
             <input type="hidden" name="channel" value={channel} />
             <input
@@ -55,12 +55,12 @@ export function VerifyPanel({
               required
               inputMode="numeric"
               placeholder="6-digit code"
-              className="w-36 rounded-lg border border-[#E2E8F0] px-3 py-1.5 text-sm"
+              className="ocean-input w-36"
             />
             <button
               type="submit"
               disabled={pending}
-              className="rounded-lg bg-[#180F6E] px-3 py-1.5 text-sm font-medium text-white disabled:opacity-60"
+              className="rounded-full bg-gradient-to-r from-[#0875ff] to-[#4338ff] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
             >
               Verify
             </button>
@@ -73,7 +73,7 @@ export function VerifyPanel({
   return (
     <div>
       {state?.message && (
-        <p role="status" className="mb-3 rounded-xl bg-[#F4F6FB] p-3 text-sm">{state.message}</p>
+        <p role="status" className="glass-panel mb-3 p-3 text-sm text-white">{state.message}</p>
       )}
       <div className="grid gap-3 md:grid-cols-2">
         {row("email", email, emailVerified)}

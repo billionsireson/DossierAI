@@ -15,12 +15,12 @@ export default async function UploadPage({
     ? (raw as UploadKind)
     : "cv";
   return (
-    <main className="py-2">
-      <Link href="/app/create" className="text-sm text-[#64748B] hover:text-[#0F172A]">
+    <main id="main" className="py-2">
+      <Link href="/app/create" className="text-sm text-[#7892b5] hover:text-white">
         ← Create
       </Link>
       <UploadFlow kind={kind} />
-      <p className="mt-4 text-xs text-[#94a3b8]">
+      <p className="mt-4 text-xs text-[#7892b5]">
         Files are validated, stored privately, and queued for extraction. Nothing is executed.
       </p>
     </main>

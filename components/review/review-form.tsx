@@ -20,11 +20,11 @@ function Field({
 }) {
   const low = typeof confidence === "number" && confidence < 0.7;
   return (
-    <label className="block rounded-xl border border-[#E2E8F0] bg-white p-4">
-      <span className="flex items-center justify-between text-sm font-medium text-[#0F172A]">
+    <label className="glass-panel block p-4">
+      <span className="flex items-center justify-between text-sm font-medium text-white">
         {label}
         {typeof confidence === "number" && (
-          <span className={`rounded-full px-2 py-0.5 text-xs ${low ? "bg-[#fef3c7] text-[#92400e]" : "bg-[#dcfce7] text-[#166534]"}`}>
+          <span className={`rounded-full px-2 py-0.5 text-xs ${low ? "bg-amber-400/20 text-amber-200" : "bg-[#00c8ff]/20 text-[#64ddff]"}`}>
             {Math.round(confidence * 100)}%
           </span>
         )}
@@ -32,9 +32,9 @@ function Field({
       <input
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm"
+        className="ocean-input mt-2"
       />
-      {low && <span className="mt-1 block text-xs text-[#92400e]">Low confidence — please confirm.</span>}
+      {low && <span className="mt-1 block text-xs text-amber-200/90">Low confidence — please confirm.</span>}
     </label>
   );
 }
@@ -83,7 +83,7 @@ export function ReviewForm({ initial, warnings }: Props) {
       {warnings.length > 0 && (
         <ul role="alert" className="mb-4 space-y-2">
           {warnings.map((w) => (
-            <li key={w} className="rounded-xl bg-[#fffbeb] p-3 text-sm text-[#92400e]">
+            <li key={w} className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-100">
               {w}
             </li>
           ))}
@@ -95,22 +95,22 @@ export function ReviewForm({ initial, warnings }: Props) {
         <Field label="Phone" value={profile.phone?.value} confidence={profile.phone?.evidence?.confidence} onChange={set("phone")} />
         <Field label="Summary" value={profile.summary?.value} confidence={profile.summary?.evidence?.confidence} onChange={set("summary")} />
       </div>
-      <div className="mt-4 rounded-xl border border-[#E2E8F0] bg-white p-4">
-        <h2 className="text-sm font-medium">Skills ({profile.skills.length})</h2>
-        <p className="mt-1 text-sm text-[#64748B]">
+      <div className="glass-panel mt-4 p-4">
+        <h2 className="text-sm font-medium text-white">Skills ({profile.skills.length})</h2>
+        <p className="mt-1 text-sm text-[#b6c8e2]">
           {profile.skills.length > 0
             ? profile.skills.map((s) => s.value).join(", ")
             : "None detected."}
         </p>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-4">
-        <label className="text-sm font-medium">
+      <div className="glass-panel mt-4 flex flex-wrap items-center gap-3 p-4">
+        <label className="text-sm font-medium text-white">
           Template{" "}
           <select
             value={templateId}
             onChange={(e) => setTemplateId(e.target.value)}
-            className="ml-1 rounded-lg border border-[#E2E8F0] px-2 py-1.5 text-sm"
+            className="ml-1 rounded-lg border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-2 py-1.5 text-sm text-white"
           >
             {TEMPLATE_IDS.map((t) => (
               <option key={t} value={t}>
@@ -122,17 +122,17 @@ export function ReviewForm({ initial, warnings }: Props) {
         <button
           onClick={() => void generate()}
           disabled={busy}
-          className="rounded-xl bg-[#2E7CF6] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_24px_rgba(46,124,246,0.45)] disabled:opacity-60"
+          className="ocean-btn"
         >
           {busy ? "Generating…" : "Generate My Portfolio"}
         </button>
         {error && (
-          <span role="alert" className="text-sm text-[#b91c1c]">
+          <span role="alert" className="text-sm text-red-300">
             {error}
           </span>
         )}
       </div>
-      <p className="mt-3 text-sm text-[#64748B]">
+      <p className="mt-3 text-sm text-[#7892b5]">
         Corrections here feed generation. Nothing is published until you publish.
       </p>
     </div>

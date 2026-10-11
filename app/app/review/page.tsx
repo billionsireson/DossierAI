@@ -35,18 +35,18 @@ export default async function ReviewPage({
   const live = Boolean(sp.storageKey);
   const project = sp.project?.slice(0, 120);
   return (
-    <main className="py-2">
-      <Link href="/app/upload" className="text-sm text-[#64748B] hover:text-[#0F172A]">
+    <main id="main" className="py-2">
+      <Link href="/app/upload" className="text-sm text-[#7892b5] hover:text-white">
         ← Upload
       </Link>
-      <h1 className="mt-3 text-2xl font-bold">We found your professional story</h1>
-      <p className="mt-1 text-sm text-[#64748B]">
+      <h1 className="mt-3 text-2xl font-semibold text-white">We found your professional story</h1>
+      <p className="mt-1 text-sm text-[#b6c8e2]">
         {live
           ? `Extracted from ${sp.fileName ?? "your file"} — correct anything wrong before generation.`
           : "Correct anything wrong before generation. Upload a file for live extraction."}
       </p>
       {project && (
-        <p className="mt-3 inline-block rounded-full bg-[#e8f1fd] px-3 py-1 text-sm font-medium text-[#1e3a8a]">
+        <p className="mt-3 inline-block rounded-full border border-[rgba(0,174,255,0.65)] bg-[rgba(0,95,255,0.12)] px-3 py-1 text-sm font-medium text-[#00c8ff]">
           Project: {project}
         </p>
       )}

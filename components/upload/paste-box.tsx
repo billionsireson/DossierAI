@@ -41,7 +41,7 @@ export function PasteBox() {
 
   return (
     <div>
-      <label htmlFor="paste-text" className="text-sm font-medium">
+      <label htmlFor="paste-text" className="text-sm font-medium text-white">
         Paste your bio, notes, or project description
       </label>
       <textarea
@@ -50,20 +50,20 @@ export function PasteBox() {
         onChange={(e) => setText(e.target.value)}
         rows={8}
         placeholder={"Esther Okafor\nProduct Designer in Lagos\nesther@example.com\nSkills: Product Design, UX Research"}
-        className="mt-2 w-full rounded-2xl border border-[#cbd5e1] bg-white p-4 text-sm"
+        className="ocean-input mt-2 min-h-44"
       />
       <button
         onClick={() => void submit()}
         disabled={busy}
-        className="mt-3 rounded-xl bg-[#2E7CF6] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_24px_rgba(46,124,246,0.4)] disabled:opacity-60"
+        className="ocean-btn mt-3"
       >
         {busy ? "Saving…" : "Save & continue"}
       </button>
       {result && (
-        <p className={`mt-3 text-sm ${result.ok ? "text-[#166534]" : "text-[#b91c1c]"}`}>
+        <p className={`mt-3 text-sm ${result.ok ? "text-[#64ddff]" : "text-red-300"}`}>
           {result.message}{" "}
           {result.reviewHref && (
-            <a href={result.reviewHref} className="font-semibold text-[#2E7CF6] hover:underline">
+            <a href={result.reviewHref} className="font-semibold text-[#00c8ff] hover:underline focus-visible:outline-2 focus-visible:outline-[#00c8ff]">
               Review →
             </a>
           )}

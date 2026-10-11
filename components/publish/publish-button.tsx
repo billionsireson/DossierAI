@@ -28,24 +28,24 @@ export function PublishButton({ portfolioId }: { portfolioId: string }) {
       <button
         disabled={busy}
         onClick={() => void run(`/api/portfolios/${portfolioId}/publish`, "POST")}
-        className="rounded-lg bg-[#B7F000] px-4 py-2 text-sm font-semibold text-[#07142F] shadow-[0_0_24px_rgba(183,240,0,0.35)] disabled:opacity-60"
+        className="rounded-full bg-gradient-to-r from-[#0875ff] to-[#4338ff] px-4 py-2 text-sm font-semibold text-white shadow-[0_6px_24px_rgba(0,93,255,0.24)] disabled:opacity-60"
       >
         {busy ? "Working…" : "Publish"}
       </button>
       <button
         disabled={busy}
         onClick={() => void run(`/api/portfolios/${portfolioId}/publish`, "DELETE")}
-        className="rounded-lg border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-medium hover:bg-[#F7FAFC] disabled:opacity-60"
+        className="rounded-full border border-[rgba(73,147,255,0.28)] bg-[rgba(7,26,51,0.75)] px-4 py-2 text-sm font-semibold text-white hover:border-[rgba(0,174,255,0.65)] disabled:opacity-60"
       >
         Unpublish
       </button>
       {url && (
-        <a href={url} className="text-sm font-medium text-[#2563EB] hover:underline">
+        <a href={url} className="text-sm font-semibold text-[#00c8ff] hover:underline focus-visible:outline-2 focus-visible:outline-[#00c8ff]">
           Open {url} →
         </a>
       )}
       {error && (
-        <span role="alert" className="text-sm text-[#b91c1c]">
+        <span role="alert" className="text-sm text-red-300">
           {error}
         </span>
       )}

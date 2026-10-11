@@ -6,7 +6,7 @@ import { saveOnboardingName } from "@/lib/auth/actions";
 export function WelcomeNameForm({ initial }: { initial?: string | null }) {
   const [state, action, pending] = useActionState(saveOnboardingName, undefined);
   return (
-    <form action={action} className="mt-6 space-y-3">
+    <form action={action} className="mt-6 space-y-3 text-white">
       <label className="block text-sm">
         <span className="mb-1 block font-medium">Your full name</span>
         <input
@@ -15,19 +15,15 @@ export function WelcomeNameForm({ initial }: { initial?: string | null }) {
           required
           minLength={2}
           placeholder="Ada Lovelace"
-          className="w-full rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-sm"
+          className="ocean-input"
         />
       </label>
       {state?.message && (
-        <p role="alert" className="rounded-xl bg-[#fef2f2] p-3 text-sm text-[#b91c1c]">
+        <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
           {state.message}
         </p>
       )}
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-full rounded-xl bg-[#180F6E] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className="ocean-btn w-full">
         {pending ? "Saving…" : "Continue"}
       </button>
     </form>

@@ -47,9 +47,9 @@ export function ReviewLoader({ storageKey, fileName, mimeType, fallback }: Props
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-[#E2E8F0] bg-white p-10 text-center" role="status">
-        <p className="font-semibold">Reading your files…</p>
-        <p className="mt-1 text-sm text-[#64748B]">
+      <div className="glass-panel animate-glow-pulse p-10 text-center" role="status">
+        <p className="font-semibold text-white">Reading your files…</p>
+        <p className="mt-1 text-sm text-[#b6c8e2]">
           Extracting your experience and structuring your story.
         </p>
       </div>
@@ -58,7 +58,7 @@ export function ReviewLoader({ storageKey, fileName, mimeType, fallback }: Props
   if (error) {
     return (
       <div>
-        <p role="alert" className="mb-4 rounded-xl bg-[#fef2f2] p-3 text-sm text-[#b91c1c]">
+        <p role="alert" className="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
           {error} — showing sample data instead.
         </p>
         <ReviewForm initial={fallback.profile} warnings={fallback.warnings} />

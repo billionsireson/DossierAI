@@ -28,8 +28,8 @@ body {
 }
 
 ::selection {
-  background: #b7f000;
-  color: #07142f;
+  background: rgba(0, 119, 255, 0.4);
+  color: white;
 }
 
 /* Ambient motion */
@@ -162,12 +162,75 @@ body {
     0 0 30px rgba(0, 102, 255, 0.2);
 }
 
-.text-gradient {
-  color: #00c8ff;
-  background: linear-gradient(110deg, #00c8ff 0%, #0875ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Ocean app primitives (dark glass system) */
+.ocean-card {
+  border-radius: 18px;
+  border: 1px solid rgba(73, 147, 255, 0.28);
+  background: linear-gradient(145deg, rgba(13, 47, 86, 0.8), rgba(3, 15, 32, 0.88));
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+}
+.ocean-input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(73, 147, 255, 0.28);
+  background: rgba(7, 26, 51, 0.75);
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  color: #f4f8ff;
+}
+.ocean-input::placeholder {
+  color: #7892b5;
+}
+.ocean-input:focus {
+  outline: 2px solid #00c8ff;
+  outline-offset: 2px;
+  border-color: rgba(0, 174, 255, 0.65);
+}
+.ocean-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(110deg, #0875ff 0%, #0755f5 52%, #4338ff 100%);
+  box-shadow: 0 6px 24px rgba(0, 93, 255, 0.24);
+  transition: box-shadow 240ms ease, transform 240ms ease;
+}
+.ocean-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 48px rgba(0, 112, 255, 0.32);
+}
+.ocean-btn:focus-visible {
+  outline: 2px solid #00c8ff;
+  outline-offset: 4px;
+}
+.ocean-btn:disabled {
+  opacity: 0.6;
+}
+.ocean-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f4f8ff;
+  border: 1px solid rgba(73, 147, 255, 0.28);
+  background: rgba(7, 26, 51, 0.75);
+  transition: border-color 240ms ease, background 240ms ease, transform 240ms ease;
+}
+.ocean-btn-ghost:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 174, 255, 0.65);
+  background: #0b2445;
 }
 
 /* Blueprint grid overlay for dark sections */
