@@ -1,8 +1,12 @@
 {
+  "id": "/",
   "name": "DossierAI — Your Skills. Your Story. Powered by AI.",
   "short_name": "DossierAI",
   "description": "Turn your CV, resume or project into a professional portfolio — instantly.",
   "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait",
+  "categories": ["business", "productivity", "utilities"],
   "display": "standalone",
   "background_color": "#180F6E",
   "theme_color": "#180F6E",
