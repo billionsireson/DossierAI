@@ -11,7 +11,6 @@ const NAV = [
   { href: "/app/portfolios", label: "My Portfolios" },
   { href: "/app/templates", label: "Templates" },
   { href: "/app/credits", label: "Credits" },
-  { href: "/app/billing", label: "Billing" },
   { href: "/app/settings", label: "Settings" },
   { href: "/app/admin", label: "Admin" },
 ];

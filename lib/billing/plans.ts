@@ -13,12 +13,20 @@ export type PlanConfig = {
   features: string[];
 };
 
+// Payments kill-switch. When false, checkout/billing UI is hidden and the
+// app runs free with time-based refills (see FREE_REFILL_*).
+export const PAYMENTS_ENABLED = false;
+
+/** Free tier: 15 credits granted automatically every 12 hours, on demand. */
+export const FREE_REFILL_CREDITS = 15;
+export const FREE_REFILL_HOURS = 12;
+
 export const PLANS: Record<PlanId, PlanConfig> = {
   FREE: {
     id: "FREE",
     name: "Free",
     priceNGN: 0,
-    creditsPerMonth: 5,
+    creditsPerMonth: 15,
     templates: ["modern-professional"],
     maxPortfolios: 1,
     publishing: { durationDays: 30, label: "1 month hosting" },

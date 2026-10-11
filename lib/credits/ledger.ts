@@ -2,7 +2,12 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { isDbConfigured } from "@/lib/env";
 import { getDb } from "@/lib/db";
-import { CREDIT_COSTS, type CreditAction } from "@/lib/billing/plans";
+import {
+  CREDIT_COSTS,
+  FREE_REFILL_CREDITS,
+  FREE_REFILL_HOURS,
+  type CreditAction,
+} from "@/lib/billing/plans";
 
 // Immutable credit ledger — PRD §27. Balance derives from transactions.
 // Live Neon path when DATABASE_URL is set, file driver otherwise (tests/dev).
@@ -14,6 +19,7 @@ export type CreditTxType =
   | "ai_rewrite"
   | "refund"
   | "bonus"
+  | "auto_refill"
   | "admin_adjustment";
 
 export type CreditTransaction = {
@@ -138,14 +144,39 @@ export async function grant(
   return append({ userId, type, amount, referenceId });
 }
 
-/** Spend credits for an AI action. Returns null when balance is insufficient. */
+/** Pure check: is this user due for a time-based refill? Exported for tests. */
+export function shouldRefill(txs: { type: string; createdAt: string }[], nowMs: number): boolean {
+  const refills = txs.filter((t) => t.type === "auto_refill");
+  if (refills.length === 0) return true;
+  const latest = Math.max(...refills.map((t) => new Date(t.createdAt).getTime()));
+  return nowMs - latest >= FREE_REFILL_HOURS * 3_600_000;
+}
+
+async function allFor(userId: string): Promise<CreditTransaction[]> {
+  if (!dbEnabled()) return loadFile().filter((t) => t.userId === userId);
+  const db = await getDb();
+  const rows = await db.creditTransaction.findMany({ where: { userId } });
+  return rows.map(toTx);
+}
+
+async function maybeRefill(userId: string): Promise<void> {
+  const all = await allFor(userId);
+  if (!shouldRefill(all, Date.now())) return;
+  await append({ userId, type: "auto_refill", amount: FREE_REFILL_CREDITS, referenceType: "refill" });
+}
+
+/** Spend credits for an AI action. Auto-refills (15 / 12h) when short. */
 export async function spend(
   userId: string,
   action: CreditAction,
   referenceId?: string,
 ): Promise<{ ok: true; tx: CreditTransaction } | { ok: false; needed: number; balance: number }> {
   const cost = CREDIT_COSTS[action];
-  const current = await balance(userId);
+  let current = await balance(userId);
+  if (current < cost) {
+    await maybeRefill(userId);
+    current = await balance(userId);
+  }
   if (current < cost) return { ok: false, needed: cost, balance: current };
   const tx = await append({
     userId,

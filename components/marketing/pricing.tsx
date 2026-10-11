@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Spot } from "@/components/motion/spot";
 import { Icons } from "@/components/marketing/icons";
+import { FREE_REFILL_CREDITS, FREE_REFILL_HOURS, PAYMENTS_ENABLED } from "@/lib/billing/plans";
 
 const PLANS = [
   {
@@ -49,6 +50,43 @@ const PLANS = [
 ];
 
 export function Pricing({ compact = false }: { compact?: boolean }) {
+  if (!PAYMENTS_ENABLED) {
+    return (
+      <section aria-labelledby="pricing-heading" className="bg-[#F4F6FB] py-20">
+        <div className="mx-auto w-full max-w-3xl px-6 text-center">
+          <h2 id="pricing-heading" className="text-3xl font-bold tracking-tight text-[#0F172A] md:text-4xl">
+            Free for everyone
+          </h2>
+          <p className="mt-2 text-[#64748B]">
+            No cards, no plans. Every template, every feature.
+          </p>
+          <Spot className="mx-auto mt-8 max-w-md rounded-3xl border border-[#E2E8F0] bg-white p-8 shadow-[0_2px_16px_rgba(24,15,110,0.06)]">
+            <p className="text-4xl font-bold">₦0</p>
+            <ul className="mt-5 space-y-2.5 text-left text-sm text-[#334155]">
+              {[
+                "All portfolio templates",
+                "AI generation + extraction",
+                `Free credits refill automatically (${FREE_REFILL_CREDITS} every ${FREE_REFILL_HOURS} hours)`,
+                "1 credit per portfolio generation",
+                "Publish + shareable URL",
+              ].map((pt) => (
+                <li key={pt} className="flex gap-2.5">
+                  <Icons.check className="mt-0.5 h-4 w-4 shrink-0 text-[#2E7CF6]" />
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/app/dashboard"
+              className="mt-7 block rounded-full bg-[#180F6E] px-4 py-3 text-center text-sm font-semibold text-white"
+            >
+              Start building free
+            </Link>
+          </Spot>
+        </div>
+      </section>
+    );
+  }
   return (
     <section aria-labelledby="pricing-heading" className="bg-[#F4F6FB] py-20">
       <div className="mx-auto w-full max-w-6xl px-6">
