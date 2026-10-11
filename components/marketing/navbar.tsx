@@ -30,7 +30,7 @@ export function Navbar() {
           href="/app/dashboard"
           className="rounded-full bg-[#2E7CF6] px-4 py-2 text-sm font-semibold text-white shadow-[0_0_24px_rgba(46,124,246,0.45)]"
         >
-          Build Your Portfolio
+          Start Your Journey Here
         </Link>
       </div>
     </header>

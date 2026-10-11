@@ -136,7 +136,7 @@ export function Hero() {
                 href="/app/dashboard"
                 className="group inline-flex items-center gap-2 rounded-full bg-[#2E7CF6] px-7 py-3.5 font-semibold text-white shadow-[0_0_36px_rgba(46,124,246,0.55)] transition-all hover:shadow-[0_0_54px_rgba(46,124,246,0.75)]"
               >
-                Create Your Portfolio
+                Start Your Journey Here
                 <Icons.arrow className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link href="/examples" className="text-sm font-medium text-[#cbd5e1] hover:text-white">

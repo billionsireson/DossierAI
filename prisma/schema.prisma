@@ -42,8 +42,12 @@ model User {
   id           String   @id @default(cuid())
   email        String   @unique
   name         String?
+  phone        String?
+  emailVerified DateTime?
+  phoneVerified DateTime?
   avatarUrl    String?
   passwordHash String?
+  passkeyHash  String?
   plan         Plan     @default(FREE)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -56,6 +60,7 @@ model User {
   aiJobs             AIJob[]
   usageEvents        UsageEvent[]
   passwordResets     PasswordReset[]
+  verificationCodes  VerificationCode[]
 }
 
 model Subscription {
@@ -222,6 +227,19 @@ model PasswordReset {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model VerificationCode {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel   String
+  codeHash  String
   expiresAt DateTime
   usedAt    DateTime?
   createdAt DateTime @default(now())

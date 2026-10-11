@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { EditorForm } from "@/components/editor/editor-form";
 import { getPortfolio, listVersions } from "@/lib/portfolio/store";
+import { getCurrentUser } from "@/lib/auth/current-user";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Edit" };
@@ -23,6 +24,15 @@ export default async function EditPage({
     );
   }
   const versions = await listVersions(id);
+  // Editing unlocks after email + phone verification (first-generation guard).
+  const user = await getCurrentUser();
+  const unverified =
+    user && (!user.emailVerified || !user.phoneVerified)
+      ? [
+          !user.emailVerified ? "email" : null,
+          !user.phoneVerified ? "phone number" : null,
+        ].filter(Boolean) as string[]
+      : [];
 
   return (
     <main className="py-2">
@@ -37,7 +47,22 @@ export default async function EditPage({
         Content · sections · design. {versions.length} version{versions.length === 1 ? "" : "s"} saved.
       </p>
       <div className="mt-5">
-        <EditorForm initial={portfolio} />
+        {unverified.length > 0 ? (
+          <div className="rounded-2xl border border-[#fcd34d] bg-[#fffbeb] p-6">
+            <h2 className="font-semibold">Verify to unlock editing</h2>
+            <p className="mt-1 text-sm text-[#92400e]">
+              Please verify your {unverified.join(" and ")} to continue editing.
+            </p>
+            <Link
+              href="/app/verify"
+              className="mt-4 inline-block rounded-xl bg-[#180F6E] px-5 py-2.5 text-sm font-semibold text-white"
+            >
+              Verify now →
+            </Link>
+          </div>
+        ) : (
+          <EditorForm initial={portfolio} />
+        )}
       </div>
     </main>
   );

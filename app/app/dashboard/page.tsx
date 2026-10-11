@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PortfolioCard } from "@/components/dashboard/portfolio-card";
 import { EmptyPortfolios } from "@/components/dashboard/empty-state";
+import { PasskeyModal } from "@/components/auth/passkey-modal";
 import { getCurrentUser, getCurrentUserId } from "@/lib/auth/current-user";
 import { demoUser } from "@/lib/demo";
 import { balance, history } from "@/lib/credits/ledger";
@@ -25,6 +26,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="py-2">
+      {user && !user.passkeyHash && <PasskeyModal />}
       <div className="relative overflow-hidden rounded-2xl bg-[#07142F] p-6 text-white md:p-8">
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="absolute -right-10 -top-16 h-48 w-72 rounded-full bg-[#2563EB]/40 blur-[80px]" />

@@ -34,7 +34,7 @@ export async function signup(_state: AuthFormState, formData: FormData): Promise
   });
   await grant(user.id, PLANS.FREE.creditsPerMonth, "bonus", "welcome");
   await createSession(user.id);
-  redirect("/app/dashboard");
+  redirect("/app/welcome");
 }
 
 export async function login(_state: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -53,12 +53,120 @@ export async function login(_state: AuthFormState, formData: FormData): Promise<
   const ok = await bcrypt.compare(parsed.data.password, user.passwordHash);
   if (!ok) return { message: "Incorrect password. Try again." };
   await createSession(user.id);
-  redirect("/app/dashboard");
+  redirect(user.phone ? "/app/dashboard" : "/app/welcome");
 }
 
 export async function logout(): Promise<void> {
   await deleteSession();
-  redirect("/login");
+  redirect("/");
+}
+
+export async function saveOnboardingName(
+  _state: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const session = await verifySession();
+  if (!session) redirect("/login");
+  const name = String(formData.get("name") ?? "").trim();
+  if (name.length < 2) return { message: "Please tell us your full name." };
+  const db = await getDb();
+  await db.user.update({ where: { id: session.userId }, data: { name } });
+  redirect("/app/welcome/contact");
+}
+
+export async function saveOnboardingContact(
+  _state: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const session = await verifySession();
+  if (!session) redirect("/login");
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const phone = String(formData.get("phone") ?? "").trim();
+  if (!email.includes("@")) return { message: "Please enter a valid email." };
+  if (phone.replace(/\D/g, "").length < 7) {
+    return { message: "Please enter an active phone number." };
+  }
+  const db = await getDb();
+  const clash = await db.user.findUnique({ where: { email } });
+  if (clash && clash.id !== session.userId) {
+    return { message: "That email belongs to another account." };
+  }
+  await db.user.update({
+    where: { id: session.userId },
+    data: { email, phone, emailVerified: null, phoneVerified: null },
+  });
+  redirect("/app/dashboard");
+}
+
+export async function setPasskey(
+  _state: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const session = await verifySession();
+  if (!session) redirect("/login");
+  const passkey = String(formData.get("passkey") ?? "").trim();
+  if (!/^\d{4,8}$/.test(passkey)) {
+    return { message: "Passkey must be 4–8 digits." };
+  }
+  const db = await getDb();
+  await db.user.update({
+    where: { id: session.userId },
+    data: { passkeyHash: await bcrypt.hash(passkey, 10) },
+  });
+  return { message: "Passkey set. Your account has an extra lock." };
+}
+
+function codeHash(code: string, userId: string): string {
+  return createHash("sha256")
+    .update(`${code}:${userId}:${process.env.AUTH_SECRET ?? ""}`)
+    .digest("hex");
+}
+
+export async function sendVerificationCode(
+  channel: "email" | "phone",
+): Promise<{ ok: boolean; debugCode?: string; message: string }> {
+  const session = await verifySession();
+  if (!session) redirect("/login");
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const db = await getDb();
+  await db.verificationCode.create({
+    data: {
+      userId: session.userId,
+      channel,
+      codeHash: codeHash(code, session.userId),
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+    },
+  });
+  // TODO(notify): deliver via email/SMS provider (Resend/Termii). Dev reveals the code.
+  if (process.env.NODE_ENV !== "production") {
+    return { ok: true, debugCode: code, message: `Dev code for ${channel}: ${code}` };
+  }
+  return { ok: true, message: `A code is on its way to your ${channel}.` };
+}
+
+export async function confirmVerificationCode(
+  _state: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const session = await verifySession();
+  if (!session) redirect("/login");
+  const channel = String(formData.get("channel") ?? "");
+  const code = String(formData.get("code") ?? "").trim();
+  if (channel !== "email" && channel !== "phone") return { message: "Invalid channel." };
+  const db = await getDb();
+  const record = await db.verificationCode.findFirst({
+    where: { userId: session.userId, channel, usedAt: null },
+    orderBy: { createdAt: "desc" },
+  });
+  if (!record || record.expiresAt < new Date() || record.codeHash !== codeHash(code, session.userId)) {
+    return { message: "Invalid or expired code. Request a fresh one." };
+  }
+  await db.verificationCode.update({ where: { id: record.id }, data: { usedAt: new Date() } });
+  await db.user.update({
+    where: { id: session.userId },
+    data: channel === "email" ? { emailVerified: new Date() } : { phoneVerified: new Date() },
+  });
+  redirect("/app/dashboard");
 }
 
 export async function changePassword(

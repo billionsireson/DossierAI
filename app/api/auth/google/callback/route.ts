@@ -33,6 +33,9 @@ export async function GET(req: Request) {
       await grant(user.id, PLANS.FREE.creditsPerMonth, "bonus", "welcome");
     }
     await createSession(user.id);
+    if (!user.phone) {
+      return NextResponse.redirect(new URL("/app/welcome", req.url));
+    }
   } catch {
     return fail("failed");
   }
