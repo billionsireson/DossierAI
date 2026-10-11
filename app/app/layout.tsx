@@ -22,10 +22,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const plan = user?.plan ?? demoUser.plan;
   return (
     <div className="min-h-screen bg-[#F7FAFC]">
-      <div className="mx-auto flex w-full max-w-6xl gap-6 px-6 py-6">
+      <div className="mx-auto flex w-full max-w-[1680px] gap-6 px-4 py-6 md:px-8">
         <aside
           aria-label="Account navigation"
-          className="hidden w-60 shrink-0 flex-col rounded-2xl bg-[#07142F] p-4 text-white md:flex"
+          className="hidden w-60 shrink-0 flex-col self-start rounded-2xl bg-[#07142F] p-4 text-white md:sticky md:top-6 md:flex md:min-h-[calc(100vh-3rem)]"
         >
           <LogoLockup className="w-36" />
           <nav className="mt-6 flex flex-col gap-1">
